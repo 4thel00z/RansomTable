@@ -1,0 +1,35 @@
+{
+  "name": "ransomtable",
+  "version": "1.0.0",
+  "description": "A simpler approach towards dynamic table creation.",
+  "main": "index.js",
+  "dependencies": {
+    "jquery": "^3.1.1"
+  },
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-cli": "^6.22.2",
+    "babel-preset-es2015": "^6.22.0",
+    "browserify": "^14.0.0",
+    "jquery-ui": "^1.12.1"
+  },
+  "scripts": {
+    "test": "test",
+    "build": "browserify index.js -o dist/bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mwheregroup/ransomtable.git"
+  },
+  "keywords": [
+    "table",
+    "jquery-ui",
+    "jquery"
+  ],
+  "author": "ransomware",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mwheregroup/ransomtable/issues"
+  },
+  "homepage": "https://github.com/mwheregroup/ransomtable#readme"
+}

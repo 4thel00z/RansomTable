@@ -1,5 +1,10 @@
+/**
+ * TODO: Replace all console.error calls with exceptions
+ * TODO: Provide rudimentary column and row manipulation methods
+ * TODO: Provide rudimentary cell styling possibility
+ * TODO: Provide cell edit feature
+ * */
 (function ($) {
-
     $.widget("ransomware.table", {
 
         /**
@@ -7,8 +12,11 @@
          * */
         options: {
             classes: {
-                container: "-js-rt-container",
+                tableContainer: "-js-rt-container",
                 table: "-js-rt-table",
+                tableBody: "-js-rt-tableBody",
+                tableHeader: "-js-rt-tableHeader",
+                tableFooter: "-js-rt-tableFooter",
                 cell: "-js-rt-cell",
                 row: "-js-rt-row",
                 selected: "-js-rt-selected",
@@ -23,10 +31,11 @@
         bounds: [0, 0],
         fillStrategy: undefined,
 
-        /**
-         * Contains the container in which the table is nested
-         * */
-        viewRoot : undefined,
+        tableContainer: undefined,
+        table: undefined,
+        tableBody: undefined,
+        tableHeader: undefined,
+        tableFooter: undefined,
 
         _create: function (options) {
             this._setProperties(options);
@@ -148,27 +157,69 @@
         _addHeader: function (options) {
 
         },
+        _addContainer: function (options) {
+            $("<table>").addClass(this.options.classes.table);
+            this.tableContainer = $container;
+            return this;
+        },
         _addTable: function (options) {
 
-            let $container = $("<div>").addClass(this.options.classes.container);
-            let $table = $("<table>").addClass(this.options.classes.table);
+            if (!this.tableContainer) {
+                console.error("ransomtable._addContainer() has to be called prior to ransomtable._addTable()");
+                return this;
+            }
 
-            this.viewRoot = $container.append($table);
+            this.table = $("<table>").addClass(this.options.classes.table);
+            this.tableBody = $("<tbody>").addClass(this.options.classes.tableBody);
+            this.tableFooter = $("<tfoot>").addClass(this.options.classes.tableFooter);
+            this.tableHeader = $("<thead>").addClass(this.options.classes.tableHeader);
+
+            // TODO: See if this is the only way
+            //this.tableContainer.append($table);
 
             return this;
         },
         _addRow: function (options) {
 
         },
-        _addColumn: function (options) {
+        _addColumn: function (rows, data) {
+
 
         },
         _fillRows: function (rows) {
 
         },
-        _fillColumns: function (columns) {
-
+        _clearTable: function () {
+            this.table.empty();
         },
+        _clearTableContent: function () {
+            this.tableBody.empty();
+        },
+        _clearTableHeader: function () {
+            this.tableHeader.empty();
+        },
+        _clearTableFooter: function () {
+            this.tableFooter.empty();
+        },
+        _fillColumns: function (data) {
+
+            if (!data) {
+
+            }
+
+            if (!this.table) {
+                console.error("ransomtable._addTable() has to be called prior to ransomtable._fillColumns!")
+                return this;
+            }
+
+            this._clearTableContent();
+
+            if (rows.length && data.length && rows.length !== data.length) {
+                console.error("The same amount of rows and data objects has to be provided.")
+                return this;
+            }
+        },
+
         _fillCells: function (cells) {
 
         }

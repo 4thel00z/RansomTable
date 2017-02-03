@@ -9,21 +9,40 @@
             classes: {
                 container: "-js-rt-container",
                 table: "-js-rt-table",
+                cell: "-js-rt-cell",
+                row: "-js-rt-row",
+                selected: "-js-rt-selected",
+                readOnly: "-js-rt-readOnly"
             },
-            fillStrategy: "rows" // rows | columns | cells
-
+            fillStrategy: "rows", // rows | columns | cells
+            onLoad: function (widget, table) {
+            }
         },
 
-        rawData: [],
+        data: [],
         bounds: [0, 0],
         fillStrategy: undefined,
+
+        /**
+         * Contains the container in which the table is nested
+         * */
+        viewRoot : undefined,
 
         _create: function (options) {
             this._setProperties(options);
         },
 
-        load: function (data, refresh) {
-            this.rawData = data;
+        load: function (payload, refresh) {
+            this.data = payload;
+
+            let fillStrategy = this._getFillStrategy();
+
+            if (!fillStrategy) {
+                console.error("Please provide valid fill strategy.");
+                return;
+            }
+
+            fillStrategy(payload, this.options.onLoad);
 
             if (refresh) {
                 this.refresh();
@@ -32,8 +51,8 @@
 
         render: function () {
 
-
         },
+
         refresh: function () {
 
         },
@@ -64,13 +83,26 @@
         _recalculateBounds: function () {
 
             let bounds = [];
-            let data = this.rawData;
+            let data = this.data;
             let size = data.length;
 
         },
         getFillStrategy: function () {
 
             return this.fillStrategy;
+        },
+        _getFillStrategy: function () {
+
+            switch (this.fillStrategy) {
+                case "rows":
+                    return this._fillRows;
+                case "columns":
+                    return this._fillColumns;
+                case "cells":
+                    return this._fillCells;
+            }
+
+            return undefined;
         },
         /**
          * Fill strategies
@@ -110,7 +142,7 @@
 
         _setProperties: function (options) {
             this.fillStrategy = options.fillStrategy;
-            this.rawData = options.data;
+            this.data = options.data;
             this._recalculateBounds();
         },
         _addHeader: function (options) {
@@ -118,14 +150,28 @@
         },
         _addTable: function (options) {
 
+            let $container = $("<div>").addClass(this.options.classes.container);
+            let $table = $("<table>").addClass(this.options.classes.table);
+
+            this.viewRoot = $container.append($table);
+
+            return this;
         },
         _addRow: function (options) {
 
         },
         _addColumn: function (options) {
 
-        }
+        },
+        _fillRows: function (rows) {
 
+        },
+        _fillColumns: function (columns) {
+
+        },
+        _fillCells: function (cells) {
+
+        }
     });
 
 }($));

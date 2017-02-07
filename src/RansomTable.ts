@@ -1,3 +1,4 @@
+import {Table} from "./Table";
 /**
  * TODO: Replace all console.error calls with exceptions
  * TODO: Provide rudimentary column and row manipulation methods
@@ -223,6 +224,10 @@ declare const $: any;
         },
 
         /**
+         * Private methods
+         * **/
+
+        /**
          * Analogue to java hashcode except that shifting bits is slower
          * than numerical hashing.
          * Find test results here: http://jsperf.com/hashing-strings
@@ -235,9 +240,6 @@ declare const $: any;
             }
             return result;
         },
-        /**
-         * Private methods
-         * **/
 
         _setProperties: function (options) {
             this.fillStrategy = options.fillStrategy;
@@ -355,13 +357,7 @@ declare const $: any;
         },
 
         _generateRows: function (n: number) {
-            const rows = [];
-
-            for (let i = 0; i < n; i++) {
-                rows.push($("<tr>"));
-            }
-
-            return rows;
+         return Table.generateRows(n);
         },
         _fillCells: function (data, cells) {
 

@@ -38,8 +38,16 @@ export class EventManager {
     public static unregisterOnKeypress(selector) {
         let eventType = "keypress";
         $(selector).removeAttr(eventType);
-        EventManager.removeFromEventMap(selector,eventType);
+        EventManager.removeFromEventMap(selector, eventType);
     }
-    
+
+
+    public static onReturnKey(selector, handler) {
+        EventManager.registerOnKeypress(selector, 14, handler);
+    }
+
+    public static offReturnKey(selector) {
+        EventManager.unregisterOnKeypress(selector);
+    }
 
 }

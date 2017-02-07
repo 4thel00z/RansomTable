@@ -23,7 +23,8 @@ declare const $: any;
                 cell: "-js-rt-cell",
                 row: "-js-rt-row",
                 selected: "-js-rt-selected",
-                readOnly: "-js-rt-readOnly"
+                readOnly: "-js-rt-readOnly",
+                input: "-js-rt-input",
             },
             fillStrategy: {
                 name: "columns", // rows | columns | cells
@@ -84,18 +85,50 @@ declare const $: any;
             return this;
         },
 
-        edit: function (column, row) {
+        edit: function (event) {
+            const $cell = $(event.target);
+            const self = this;
+            if ($cell) {
 
-        },
-        isInBounds: function (column, row) {
+                if ($cell.hasClass(self.options.classes.readOnly)) {
+                    return false;
+                }
+                let isInEditMode = $cell.children("input").length > 0;
 
+                if (!isInEditMode) {
+                    let cellContent = $cell.text();
+                    $cell.empty();
+                    $("<input>").addClass(self.options.classes.input).val(cellContent).appendTo($cell);
+                    let editTableBodyClickHandler = function (event) {
+                        let $target = $(event.target);
+                        if ($target.children().hasClass(self.options.classes.input) || $target.children().hasClass(":focus")) {
+                            return false;
+                        }
+                        self.tableContainer.find("." + self.options.classes.input).each(function (i, input) {
+                            let $input = $(input);
+                            let $inputParentCell = $input.parent();
+                            const inputContent = $input.val();
+                            $inputParentCell.empty();
+                            $inputParentCell.text(inputContent);
+                            self.tableContainer.off("click.editTableBody");
+                        });
+                    };
+
+                    self.tableContainer.on("click.editTableBody", editTableBodyClickHandler);
+                }
+
+
+            }
         },
         get: function (column, row) {
-
+            let $column = this.getColumn(column);
+            return $column && $column[row - 1];
         },
-
+        /*
+         * Not zero indexed !
+         * */
         getColumn: function (column) {
-            return this.tableBody.find("tr:nth-child(" + column + ")");
+            return this.tableBody.find("tr>td:nth-child(" + column + ")");
         },
 
         getRow: function (row) {
@@ -214,19 +247,19 @@ declare const $: any;
             this._recalculateBounds();
             return this;
         },
-        _addHeader: function (headers: Array<string>) {
+        _addHeader: function (headerTexts: Array<string>) {
             this._clearTableHeader();
             let $row = $("<tr>");
-            headers.forEach(function (header, i) {
-                $row.append($("<th>").text(header));
+            headerTexts.forEach(function (headerText, i) {
+                $row.append($("<th>").text(headerText)).addClass(this.options.classes.readOnly);
             });
             this.tableHeader.append($row);
         },
-        _addFooter: function (footers: Array<string>) {
+        _addFooter: function (footerTexts: Array<string>) {
             this._clearTableFooter();
             let $row = $("<tr>");
-            footers.forEach(function (footer, i) {
-                $row.append($("<td>").text(footer));
+            footerTexts.forEach(function (footerText, i) {
+                $row.append($("<td>").text(footerText)).addClass(this.options.classes.readOnly);
             });
             this.tableFooter.append($row);
         },
@@ -272,11 +305,12 @@ declare const $: any;
         _clearTableFooter: function () {
             this.tableFooter.empty();
         },
-
         _fillColumns: function (columnDataList) {
             debugger;
-            const stride = this.fillStrategy && this.fillStrategy.stride;
 
+            const self = this;
+
+            const stride = this.fillStrategy && this.fillStrategy.stride;
             if (!columnDataList) {
                 console.error("ransomtable.load() has to be called prior to ransomtable._fillColumns!");
                 return this;
@@ -287,28 +321,27 @@ declare const $: any;
                 return this;
             }
 
-            let rows = this._generateRows(columnDataList.length / stride);
 
+            let rows = this._generateRows(columnDataList.length / stride);
             if (!this.table) {
                 console.error("ransomtable._addTable() has to be called prior to ransomtable._fillColumns!");
                 return this;
             }
 
-            this._clearTableContent();
 
+            this._clearTableContent();
             if (!rows || !rows.length || !columnDataList.length || rows.length * stride !== columnDataList.length) {
                 console.error("The same amount of rows and tableBodyData objects has to be provided.");
                 return this;
             }
 
             let tableRows = [];
-            const self = this;
             columnDataList.forEach(function (data, i) {
                 let $row = tableRows[i % stride] ? tableRows[i % stride] : $(rows[i % stride]);
                 if (tableRows.length < stride) {
                     tableRows.push($row);
                 }
-                let $cell = $("<td>");
+                let $cell = $("<td>").click($.proxy(self.edit, self));
                 $row.append($cell.text(data));
                 if (i >= columnDataList.length - stride) {
                     self.tableBody.append($row);

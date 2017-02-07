@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="node_modules/jquery-ui/dist/jquery-ui.js"></script>
+<script src="dist/bundle.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $("<div>").appendTo($("body")).table({
+            data: {
+                body: ["hallo", "test", "pipapo"],
+                header:["header1","header2","header3"],
+                footer:["footer1","footer2","footer3"]
+            }
+        }).table("render");
+
+    });
+</script>
+</body>
+</html>

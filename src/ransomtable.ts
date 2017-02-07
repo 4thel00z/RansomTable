@@ -51,12 +51,12 @@ declare const $: any;
         tableFooter: undefined,
 
         _create: function () {
-            this._setProperties(this.options);
+            $.proxy(this._setProperties,this)(this.options);
             return this;
         },
 
         load: function (payload, refresh) {
-
+            const self = this;
             const dataHash = this._getHash(payload);
             if (dataHash === this.lastDataHash && !refresh) {
                 console.info("Took tableBodyData from cache.");
@@ -73,11 +73,11 @@ declare const $: any;
                 return;
             }
 
-            $.proxy(this._addHeader, this)(payload.header);
-            $.proxy(fillStrategy, this)(payload.body, this.options.onLoad);
-            $.proxy(this._addFooter, this)(payload.footer);
+            $.proxy(self._addHeader, self)(payload.header);
+            $.proxy(fillStrategy, self)(payload.body, self.options.onLoad);
+            $.proxy(self._addFooter, self)(payload.footer);
 
-            return this;
+            return self;
         },
 
         render: function () {
@@ -243,23 +243,25 @@ declare const $: any;
             this.fillStrategy = options.fillStrategy;
             this._addContainer(options);
             this._addTable(options);
-            this.load(options.data, true);
+            $.proxy(this.load, this)(options.data, true);
             this._recalculateBounds();
             return this;
         },
         _addHeader: function (headerTexts: Array<string>) {
+            const self = this;
             this._clearTableHeader();
             let $row = $("<tr>");
             headerTexts.forEach(function (headerText, i) {
-                $row.append($("<th>").text(headerText)).addClass(this.options.classes.readOnly);
+                $row.append($("<th>").text(headerText)).addClass(self.options.classes.readOnly);
             });
             this.tableHeader.append($row);
         },
         _addFooter: function (footerTexts: Array<string>) {
+            const self = this;
             this._clearTableFooter();
             let $row = $("<tr>");
             footerTexts.forEach(function (footerText, i) {
-                $row.append($("<td>").text(footerText)).addClass(this.options.classes.readOnly);
+                $row.append($("<td>").text(footerText)).addClass(self.options.classes.readOnly);
             });
             this.tableFooter.append($row);
         },

@@ -15,7 +15,7 @@
     "test": "test",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
-    "build": "npm run tsc && browserify dist/index.js -o dist/bundle.js"
+    "build": "cp src/css/*.css dist/src/css && npm run tsc && browserify dist/index.js -o dist/bundle.js"
 
   },
   "repository": {

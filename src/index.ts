@@ -1,1 +1,3 @@
-import "./ransomtable";
+import "./RansomTable";
+import "./EventManager";
+import "./Table";

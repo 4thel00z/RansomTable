@@ -10,9 +10,9 @@ declare const $: any;
 
 export class Table {
 
-    private _header: Row;
-    private rows: Array<Row> = [];
-    private _footer: Row;
+    public header: Row;
+    public body: Array<Row> = [];
+    public footer: Row;
 
     private container: any;
     private table: any;
@@ -33,12 +33,39 @@ export class Table {
         input: '-js-rt-input'
     };
 
-    constructor(tableData: TableData) {
-        this._header = Row.from(tableData.header);
-        tableData.body.forEach(function (element: RowElement, i: number) {
-            this.body[i] = Row.from(element);
+    constructor(options) {
+        let self = this;
+        const body: Array<RowElement> = [];
+
+        if (options.body) {
+            debugger;
+            options.body.forEach(function (row) {
+
+                body.push({
+                    type: "body",
+                    cellElements: row
+                });
+            });
+        }
+
+        let tableData: TableData = {
+            body: body,
+            footer: {
+                type: "footer",
+                cellElements: options.footer
+            }, header: {
+                type: "header",
+                cellElements: options.header
+            },
+
+
+        };
+
+        self.header = Row.from(tableData.header);
+        body.forEach(function (element: RowElement, i: number) {
+            self.body[i] = Row.from(element);
         });
-        this._footer = Row.from(tableData.footer);
+        self.footer = Row.from(tableData.footer);
     }
 
     private initializeViews() {
@@ -94,7 +121,7 @@ export class Table {
     public getColumn(columnIndex: number, withHeader: boolean = false, withFooter: boolean = false) {
         const column: Array<Cell> = [];
 
-        this.rows.forEach(function (row, i) {
+        this.body.forEach(function (row, i) {
             column[i] = row.get(columnIndex);
         });
 
@@ -104,7 +131,7 @@ export class Table {
     }
 
     public getRow(rowIndex: number): Row {
-        return this.rows.length > rowIndex && rowIndex >= 0 ? this.rows[rowIndex] : null;
+        return this.body.length > rowIndex && rowIndex >= 0 ? this.body[rowIndex] : null;
     }
 
 
@@ -124,22 +151,17 @@ export class Table {
             this.initializeViews();
         }
 
-        this.container.append(this._header.render(self.tableHeader));
+        this.container.append(this.header.render(self.tableHeader));
 
-        this.rows.forEach(function (row) {
+        this.body.forEach(function (row) {
             row.render(self.tableBody);
         });
 
         this.container.append(self.tableBody);
-        this.container.append(this._footer.render(self.tableFooter));
+        this.container.append(this.footer.render(self.tableFooter));
         $(node).append(this.container);
+        return this;
     }
 
-    get footer(): Row {
-        return this._footer;
-    }
 
-    get header(): Row {
-        return this._header;
-    }
 }

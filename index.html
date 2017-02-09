@@ -14,31 +14,18 @@
 
     $(document).ready(function () {
 
-        /**
-         *         $("<div>").appendTo($("body")).table({
-            data: {
-                body: ["hallo", "test", "pipapo"],
-                header:["header1","header2","header3"],
-                footer:["footer1","footer2","footer3"]
-            }
-        }).table("render");
-         * */
+        const body = [];
 
-        /**
-         *  public content?: string = "";
-         public readOnly?: boolean = false;
-         public type?: "header"|"body"|"footer";
-         public classes?: Array<string> = [];
-         * */
 
-        $("<div>").appendTo($("body")).table({
-            body: [
-                [{content: "Test", readOnly: true}, {content: "Test"}]
-            ],
-            header: [{content: "Test", readOnly: true}, {content: "Test"}],
-            footer: [{content: "Test", readOnly: true}, {content: "Test"}]
+        for (let i = 0; i < 17; i++) {
+            body[i] = [{content: "Body", readOnly: true}, {content: "Body"}];
+        }
+        $("body").table({
+            body: body,
+            header: [{content: "Header", readOnly: true}, {content: "Header"}],
+            footer: [{content: "Footer", readOnly: true}, {content: "Footer"}]
 
-        }).table("render",true);
+        }).table("render", true);
 
     });
 </script>

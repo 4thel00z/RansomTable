@@ -1,5 +1,6 @@
 import {Table} from "./Table";
 import {Cell} from "./Cell";
+import {EventManager} from "./EventManager";
 declare const $: any;
 
 export class EditField {
@@ -22,20 +23,33 @@ export class EditField {
         this.inputField.remove();
     }
 
-    public edit(cell: Cell) {
+    public edit(cell: Cell, event: Event) {
+       
         if (cell.readOnly) {
             return;
         }
+
         if (cell.editMode) {
-            let text: string = this.inputField.val();
-            cell.element.empty();
-            cell.element.text(text);
+            return;
         }
         else {
-            cell.cache = cell.element.text();
-            cell.element.empty();
-            cell.element.append(this.inputField.val(cell.cache));
+            this.enable(cell);
         }
-        cell.editMode = !cell.editMode;
     }
+
+    public disable(cell: Cell) {
+        let text: string = this.inputField.val();
+        cell.element.empty();
+        cell.element.text(text);
+        cell.editMode = false;
+
+    }
+
+    public enable(cell: Cell) {
+        cell.cache = cell.element.text();
+        cell.element.empty();
+        cell.element.append(this.inputField.val(cell.cache));
+        cell.editMode = true;
+    }
+
 }

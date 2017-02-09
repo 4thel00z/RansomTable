@@ -6,75 +6,39 @@ declare const $: any;
 
 export class Cell {
 
-    private _content: string;
-    private _readOnly: boolean;
-    private type: ElementType;
-    private _editMode: boolean = false;
-    private _element: any;
-    private classes: Array<string>;
-    private _cache: string;
-    private editField: EditField;
+    public content: string;
+    public readOnly: boolean;
+    public type: ElementType;
+    public editMode: boolean = false;
+    public element: any;
+    public classes: Array<string>;
+    public cache: string;
+    public editField: EditField;
 
     private constructor(content: string, readOnly: boolean = false, type: ElementType = ElementType.BODY, classes: Array<string> = []) {
-        this._content = content;
-        this._readOnly = readOnly;
+        this.content = content;
+        this.readOnly = readOnly;
         this.type = type;
 
         switch (type) {
             case ElementType.FOOTER:
             case ElementType.BODY:
-                this._element = $('<td>');
+                this.element = $('<td>');
                 break;
 
             case ElementType.HEADER:
-                this._element = $('<th>');
+                this.element = $('<th>');
                 break;
         }
 
-        if (this._readOnly) {
-            this._element.addClass(Table.classes.readOnly);
+        if (this.readOnly) {
+            this.element.addClass(Table.classes.readOnly);
         }
         if (this.classes) {
-            this._element.addClass(this.classes.join(' '));
+            this.element.addClass(this.classes.join(' '));
         }
-
+        this.element.text(content);
         this.editField = new EditField();
-    }
-
-    get readOnly(): boolean {
-        return this._readOnly;
-    }
-
-    get editMode(): boolean {
-        return this._editMode;
-    }
-
-    set editMode(value: boolean) {
-        this._editMode = value;
-    }
-
-    get content(): string {
-        return this._content;
-    }
-
-    set content(value: string) {
-        this._content = value;
-    }
-
-    get element(): any {
-        return this._element;
-    }
-
-    set element(value: any) {
-        this._element = value;
-    }
-
-    get cache(): string {
-        return this._cache;
-    }
-
-    set cache(value: string) {
-        this._cache = value;
     }
 
     public edit() {
@@ -95,4 +59,13 @@ export class Cell {
         return new Cell(cellElement.content, cellElement.readOnly, cellElement.type, cellElement.classes)
     }
 
+    static fromArray(cellElements: Array<CellElement>): Array<Cell> {
+        const cells: Array<Cell> = [];
+
+        cellElements.forEach(function (element) {
+            cells.push(Cell.from(element));
+        });
+
+        return cells;
+    }
 }

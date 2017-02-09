@@ -40,19 +40,25 @@ declare const $: any;
         lastDataHash: undefined,
         bounds: [0, 0],
         fillStrategy: undefined,
-
+        table: undefined,
 
         /**
          * Table components
          * */
         tableContainer: undefined,
-        table: undefined,
         tableBody: undefined,
         tableHeader: undefined,
         tableFooter: undefined,
 
         _create: function () {
-            $.proxy(this._setProperties,this)(this.options);
+            let self = this;
+            self.table = new Table({
+                header: this.options.header,
+                footer: this.options.footer,
+                body: this.options.body
+            });
+
+            //$.proxy(this._setProperties, this)(this.options);
             return this;
         },
 
@@ -81,8 +87,10 @@ declare const $: any;
             return self;
         },
 
-        render: function () {
-            this.element .append($(this.tableContainer));
+        render: function (initialize: boolean) {
+            //this.element .append($(this.tableContainer));
+            let self = this;
+            self.table.render(this.element, initialize);
             return this;
         },
 
@@ -357,7 +365,7 @@ declare const $: any;
         },
 
         _generateRows: function (n: number) {
-         return Table.generateRows(n);
+
         },
         _fillCells: function (data, cells) {
 

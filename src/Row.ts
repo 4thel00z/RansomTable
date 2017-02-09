@@ -1,5 +1,5 @@
 import {Cell} from "./Cell";
-import {CellElement, SimpleCellElement} from "./CellElement";
+import {CellElement, SimpleCellElement, ICellElement} from "./CellElement";
 import {RowElement} from "./RowElement";
 import {ElementType} from "./ElementType";
 import {Table} from "./Table";
@@ -7,11 +7,11 @@ declare const $: any;
 
 export class Row {
 
-    private element: any;
-    private type: ElementType;
+    protected element: any;
+    protected type: ElementType;
     protected cells: Array<Cell>;
 
-    private constructor(cells: Array<Cell>, type: ElementType = ElementType.BODY) {
+    private constructor(cells: Array<Cell>, type: "header"|"body"|"footer" = ElementType.BODY) {
         this.cells = cells;
         this.type = type;
         this.element = $("<tr>");
@@ -19,9 +19,11 @@ export class Row {
 
     public static from(element: RowElement): Row {
         const cells: Array<Cell> = [];
-        element.cellElements.forEach(function (cellElement, index) {
-            cells[index] = Cell.from(cellElement);
-        });
+        if (element.cellElements) {
+            element.cellElements.forEach(function (cellElement, index) {
+                cells[index] = Cell.from(cellElement);
+            });
+        }
         return new Row(cells, element.type);
     }
 
@@ -33,7 +35,7 @@ export class Row {
         return this.cells.length;
     }
 
-    public static generateEmptyRows(n: number, cells: number, type: ElementType) {
+    public static generateEmptyRows(n: number, cells: number, type: "header"|"body"|"footer") {
         const rowElement: RowElement = {
             type: ElementType.BODY,
             cellElements: SimpleCellElement.times(cells)
@@ -44,6 +46,11 @@ export class Row {
             rows.push(Row.from(rowElement));
         }
         return rows;
+    }
+
+    public static fromRaw(raw: {type: "header"|"body"|"footer", data: Array<ICellElement>}): Row {
+
+        return new Row(Cell.fromArray(SimpleCellElement.fromArray(raw.data, raw.type)), raw.type);
     }
 
     public empty() {

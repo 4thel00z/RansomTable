@@ -2,6 +2,7 @@ import {Table} from './Table';
 import {CellElement} from "./CellElement";
 import {ElementType} from "./ElementType";
 import {EditField} from "./EditField";
+import {UUID} from "./UUID";
 declare const $: any;
 
 export class Cell {
@@ -23,26 +24,31 @@ export class Cell {
         switch (type) {
             case ElementType.FOOTER:
             case ElementType.BODY:
-                this.element = $('<td>');
+                this.element = $('<td>').addClass(Table.classes.cell);
                 break;
 
             case ElementType.HEADER:
-                this.element = $('<th>');
+                this.element = $('<th>').addClass(Table.classes.headerCell);
                 break;
         }
 
         if (this.readOnly) {
             this.element.addClass(Table.classes.readOnly);
+        } else {
+            this.element.click($.proxy(this.edit, this));
         }
+
         if (this.classes) {
             this.element.addClass(this.classes.join(' '));
         }
         this.element.text(content);
+        //this.element.attr("id", UUID.register(this.element));
+
         this.editField = new EditField();
     }
 
-    public edit() {
-        this.editField.edit(this);
+    public edit(event) {
+        this.editField.edit(this, event);
     }
 
     public static generate(n: number, element: CellElement): Array<Cell> {
@@ -55,15 +61,17 @@ export class Cell {
         return cells;
     }
 
-    static from(cellElement: CellElement) {
-        return new Cell(cellElement.content, cellElement.readOnly, cellElement.type, cellElement.classes)
+    static from(cellElement: CellElement, type?: "header"|"body"|"footer") {
+        return new Cell(cellElement.content, cellElement.readOnly, type || cellElement.type, cellElement.classes)
     }
 
-    static fromArray(cellElements: Array<CellElement>): Array<Cell> {
+    static fromArray(cellElements: Array<CellElement>, type?: "header"|"body"|"footer"): Array<Cell> {
         const cells: Array<Cell> = [];
 
+        if (!cellElements) return cells;
+
         cellElements.forEach(function (element) {
-            cells.push(Cell.from(element));
+            cells.push(Cell.from(element, type));
         });
 
         return cells;

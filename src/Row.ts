@@ -18,13 +18,7 @@ export class Row {
     }
 
     public static from(element: RowElement): Row {
-        const cells: Array<Cell> = [];
-        if (element.cellElements) {
-            element.cellElements.forEach(function (cellElement, index) {
-                cells[index] = Cell.from(cellElement);
-            });
-        }
-        return new Row(cells, element.type);
+        return new Row(Cell.fromArray(element.cellElements, element.type), element.type);
     }
 
     public get(cellIndex: number): Cell|null {
@@ -49,7 +43,6 @@ export class Row {
     }
 
     public static fromRaw(raw: {type: "header"|"body"|"footer", data: Array<ICellElement>}): Row {
-
         return new Row(Cell.fromArray(SimpleCellElement.fromArray(raw.data, raw.type)), raw.type);
     }
 

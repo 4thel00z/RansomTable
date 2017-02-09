@@ -2,6 +2,7 @@ import {Row} from "./Row";
 import {TableData} from "./TableData";
 import {RowElement} from "./RowElement";
 import {Cell} from "./Cell";
+import {Range} from "./Range";
 declare const $: any;
 
 /**
@@ -20,6 +21,10 @@ export class Table {
     private tableHeader: any;
     private tableFooter: any;
 
+    private static VISIBLE_ROWS_PER_PAGE: number = 20;
+    private currentPage: number = 0;
+
+    private visibility: Range = new Range(0, 0);
     public static classes = {
         tableContainer: '-js-rt-container',
         table: '-js-rt-table',
@@ -27,6 +32,7 @@ export class Table {
         tableHeader: '-js-rt-tableHeader',
         tableFooter: '-js-rt-tableFooter',
         cell: '-js-rt-cell',
+        headerCell: '-js-rt-headerCell',
         row: '-js-rt-row',
         selected: '-js-rt-selected',
         readOnly: '-js-rt-readOnly',
@@ -38,9 +44,7 @@ export class Table {
         const body: Array<RowElement> = [];
 
         if (options.body) {
-            debugger;
             options.body.forEach(function (row) {
-
                 body.push({
                     type: "body",
                     cellElements: row
@@ -66,6 +70,7 @@ export class Table {
             self.body[i] = Row.from(element);
         });
         self.footer = Row.from(tableData.footer);
+        self.visibility.max = self.body.length < Table.VISIBLE_ROWS_PER_PAGE ? self.body.length : Table.VISIBLE_ROWS_PER_PAGE;
     }
 
     private initializeViews() {
@@ -151,16 +156,26 @@ export class Table {
             this.initializeViews();
         }
 
+        self.calculatePageVisibility();
+
         this.container.append(this.header.render(self.tableHeader));
 
-        this.body.forEach(function (row) {
-            row.render(self.tableBody);
+        this.body.forEach(function (row, i) {
+            if (self.visibility.isLeftInclusive(i)) {
+                row.render(self.tableBody);
+            }
         });
 
         this.container.append(self.tableBody);
         this.container.append(this.footer.render(self.tableFooter));
         $(node).append(this.container);
         return this;
+    }
+
+    private calculatePageVisibility() {
+        const self: Table = this;
+        self.visibility.min = self.currentPage * Table.VISIBLE_ROWS_PER_PAGE;
+        self.visibility.max = (self.currentPage + 1) * Table.VISIBLE_ROWS_PER_PAGE;
     }
 
 

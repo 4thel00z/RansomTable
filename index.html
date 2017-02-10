@@ -19,12 +19,12 @@
 
 
         for (let i = 0; i < 17; i++) {
-            body[i] = [{content: "Body", readOnly: true}, {content: "Body"}];
+            body[i] = [{content: "Body", readOnly: true}, {content: "Body"},{content: "Lorem Ipsum"}];
         }
         $("body").table({
             body: body,
-            header: [{content: "Header", readOnly: true}, {content: "Header"}],
-            footer: [{content: "Footer", readOnly: true}, {content: "Footer"}]
+            header: [{content: "Header", readOnly: true}, {content: "Header"},{content: "Header"}],
+            footer: [{content: "Footer", readOnly: true}, {content: "Footer"}, {content: "Footer"}]
 
         }).table("render", true);
 

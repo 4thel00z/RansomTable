@@ -15,11 +15,11 @@ export class Table {
     public body: Array<Row> = [];
     public footer: Row;
 
-    private container: any;
-    private table: any;
-    private tableBody: any;
-    private tableHeader: any;
-    private tableFooter: any;
+    public container: any;
+    public table: any;
+    public tableBody: any;
+    public tableHeader: any;
+    public tableFooter: any;
 
     private static VISIBLE_ROWS_PER_PAGE: number = 20;
     private currentPage: number = 0;
@@ -34,6 +34,8 @@ export class Table {
         cell: '-js-rt-cell',
         headerCell: '-js-rt-headerCell',
         row: '-js-rt-row',
+        headerRow: '-js-rt-header-row',
+        footerRow: '-js-rt-footer-row',
         selected: '-js-rt-selected',
         readOnly: '-js-rt-readOnly',
         input: '-js-rt-input'
@@ -65,11 +67,11 @@ export class Table {
 
         };
 
-        self.header = Row.from(tableData.header);
+        self.header = Row.from(tableData.header, self);
         body.forEach(function (element: RowElement, i: number) {
-            self.body[i] = Row.from(element);
+            self.body[i] = Row.from(element, self);
         });
-        self.footer = Row.from(tableData.footer);
+        self.footer = Row.from(tableData.footer, self);
         self.visibility.max = self.body.length < Table.VISIBLE_ROWS_PER_PAGE ? self.body.length : Table.VISIBLE_ROWS_PER_PAGE;
     }
 
@@ -158,7 +160,7 @@ export class Table {
 
         self.calculatePageVisibility();
 
-        this.container.append(this.header.render(self.tableHeader));
+        this.table.append(this.header.render(self.tableHeader));
 
         this.body.forEach(function (row, i) {
             if (self.visibility.isLeftInclusive(i)) {
@@ -166,8 +168,9 @@ export class Table {
             }
         });
 
-        this.container.append(self.tableBody);
-        this.container.append(this.footer.render(self.tableFooter));
+        this.table.append(self.tableBody);
+        this.table.append(this.footer.render(self.tableFooter));
+        this.table.appendTo(this.container);
         $(node).append(this.container);
         return this;
     }

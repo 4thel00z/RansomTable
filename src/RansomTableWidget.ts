@@ -15,20 +15,17 @@ declare const $: any;
          * Default options section
          * */
         options: {},
-
-
         _create: function () {
             let self = this;
+
             self.table = new Table({
                 header: this.options.header,
                 footer: this.options.footer,
                 body: this.options.body
             });
 
-            this.load = this.table.load;
+            this._setup();
         },
-
-        load: undefined,
 
         render: function (initialize: boolean) {
             //this.element .append($(this.tableContainer));
@@ -40,62 +37,34 @@ declare const $: any;
             return this;
         },
 
+        load: null,
+
         /*
          * Zero indexed !
          * */
 
-        getCell: function (column, row) {
-            const self = this;
-            let table: Table = self.table;
-            if (table) {
-                return table.getCell(column, row)
-            }
-            return null;
-        },
-        getColumn: function (column) {
-            const self = this;
-            return self.table.getColumn(column);
-        },
-        getRow: function (row) {
-            const self = this;
-            return self.table.getRow(row);
-        },
+        getCell: null,
+        getColumn: null,
+        getRow: null,
 
         /**
          * Private methods
          * **/
 
+        addRow: null,
+        addColumn: null,
+        remove: null,
+        clear: null,
+        hide: null,
 
-        addRow: function (options) {
-
-        },
-
-        addColumn: function (rows, data) {
-        },
-
-
-        clearTable: function () {
-            const self = this;
-            let table: Table = self.table;
-            if (table) {
-                table.empty();
-            }
-
-        },
-
-        clear: function () {
-            const self = this;
-            let table: Table = self.table;
-            if (table) {
-                table.empty();
-            }
-        },
-        hide: function () {
-            const self = this;
-            let table: Table = self.table;
-            if (table) {
-                table.hide();
-            }
+        _setup: function () {
+            this.load = this.table.load;
+            this.getCell = this.table.getCell;
+            this.getColumn = this.table.getColumn;
+            this.getRow = this.table.getRow;
+            this.remove = this.table.remove;
+            this.clear = this.table.clear;
+            this.hide = this.table.hide;
         }
 
     })

@@ -1,8 +1,27 @@
 declare const $: any;
+declare const window: any;
 
 export class EventManager {
 
     private static eventMap = {};
+
+    public static makeGlobal() {
+        if (window) {
+            if (!window.ransomware) {
+                window.ransomware = {};
+            }
+            if (!window.ransomware.EventManager) {
+                window.ransomware.EventManager = EventManager;
+            }
+        }
+    }
+
+    public static removeGlobal() {
+        if (window && window.ransomware) {
+            return delete window.ransomware.EventManager;
+        }
+        return false;
+    }
 
     private static addToEventMap(selector, eventType, handler) {
         if (!EventManager.eventMap[eventType]) {

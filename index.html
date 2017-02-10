@@ -19,14 +19,27 @@
 
 
         for (let i = 0; i < 17; i++) {
-            body[i] = [{content: "Body", readOnly: true}, {content: "Body"},{content: "Lorem Ipsum"}];
+            body[i] = [{content: "Body", readOnly: true}, {content: "Body"}, {content: "Lorem Ipsum"}];
         }
         $("body").table({
             body: body,
-            header: [{content: "Header", readOnly: true}, {content: "Header"},{content: "Header"}],
+            header: [{content: "Header", readOnly: true}, {content: "Header"}, {content: "Header"}],
             footer: [{content: "Footer", readOnly: true}, {content: "Footer"}, {content: "Footer"}]
 
         }).table("render", true);
+
+        /*
+
+         // Dialog example :
+
+         $("<div></div>").table({
+         body: body,
+         header: [{content: "Header", readOnly: true}, {content: "Header"},{content: "Header"}],
+         footer: [{content: "Footer", readOnly: true}, {content: "Footer"}, {content: "Footer"}]
+
+         }).table("render", true).dialog();
+
+         */
 
     });
 </script>

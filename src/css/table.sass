@@ -1,6 +1,8 @@
-body 
+body
   font-family: arial
 
+.-js-rt-container
+  display: block
 
 .-js-rt-table
   border: 1px solid #ccc
@@ -10,38 +12,33 @@ body
   border-collapse: collapse
   border-spacing: 0
 
-
-.-js-rt-row
+.-js-rt-tableBody>.-js-rt-row
   border: 1px solid #ddd
   padding: 5px
-
+  &:hover
+    background-color: #e0e0e0
 
 .-js-rt-headerCell, .-js-rt-cell
   padding: 10px
   text-align: center
-
 
 .-js-rt-headerCell
   text-transform: uppercase
   font-size: 14px
   letter-spacing: 1px
 
-
 @media screen and (max-width: 600px)
 
   .-js-rt-table
     border: 0
 
-
   .-js-rt-tableHeader
     display: none
-
 
   .-js-rt-row
     margin-bottom: 10px
     display: block
     border-bottom: 2px solid #ddd
-
 
   .-js-rt-cell
     display: block
@@ -49,10 +46,8 @@ body
     font-size: 13px
     border-bottom: 1px dotted #ccc
 
-
   .-js-rt-cell:last-child
     border-bottom: 0
-
 
   .-js-rt-cell:before
     content: attr(data-label)

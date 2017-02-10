@@ -26,11 +26,13 @@ export class EventManager {
         return wasFound;
     }
 
-    public static registerOnKeypress(selector, key, handler) {
-        $(selector).keypress(function (event) {
+    public static registerOnKeypress(selector, key, handler, data?) {
+        EventManager.addToEventMap(selector, "keypress", handler);
+        $(selector).keypress(data, function (event) {
             if (event.which === key) {
-                event.preventDefault();
-                return handler(event);
+                event.data = data;
+                handler(event);
+                return false;
             }
         });
     }
@@ -42,8 +44,8 @@ export class EventManager {
     }
 
 
-    public static onReturnKey(selector, handler) {
-        EventManager.registerOnKeypress(selector, 14, handler);
+    public static onReturnKey(selector, handler, data) {
+        EventManager.registerOnKeypress(selector, 13, handler, data);
     }
 
     public static offReturnKey(selector) {

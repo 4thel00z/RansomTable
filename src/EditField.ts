@@ -1,11 +1,14 @@
 import {Table} from "./Table";
 import {Cell} from "./Cell";
 import {EventManager} from "./EventManager";
+import {UUID} from "./UUID";
 declare const $: any;
 
 export class EditField {
 
     private inputField: any;
+    private lastDisabled: number;
+    private static DISABLE_TO_ENABLE_TRANSITION_THRESHOLD: number = 400;
 
     constructor(cell: Cell) {
         this.load(cell);
@@ -34,20 +37,14 @@ export class EditField {
         }
         else {
             this.enable(cell, event);
-            const container = cell.table.container;
-            if (container) {
-                container.on("mousedown." + cell.element.attr("id"), {
-                    self: this,
-                    cell: cell
-                }, this.disable);
-            }
+
         }
     }
 
     public disable(event) {
         const cell: Cell = event.data.cell;
         const self: EditField = event.data.self;
-        if (EditField.inBounds(cell, event)) {
+        if (self.inBounds(event)) {
             // Clicking on the same cell has to be ignored
             return true;
         }
@@ -59,21 +56,20 @@ export class EditField {
         if (container) {
             container.off("mousedown." + cell.element.attr("id"));
         }
-        let readOnlyCells = cell.table.tableBody.find("." + Table.classes.readOnly);
+
+        EventManager.offReturnKey("#" + self.inputField.attr("id"));
+        self.lastDisabled = +new Date();
         return false;
     }
 
-    public static inBounds(cell: Cell, event) {
+    public inBounds(event: {clientX: number, clientY: number}) {
 
         const clientX: number = event.clientX;
         const clientY: number = event.clientY;
-        const pageX: number = event.pageX;
-        const pageY: number = event.pageY;
 
-
-        const element = cell.element;
-        const width: number = element.outerWidth();
-        const height: number = element.outerHeight();
+        const element = this.inputField;
+        const width: number = element.width();
+        const height: number = element.height();
         const offset: {top: number, left: number} = element.offset();
 
         return clientX >= offset.left && clientX <= offset.left + width &&
@@ -82,12 +78,26 @@ export class EditField {
     }
 
     public enable(cell: Cell, event: Event) {
-
         const self: EditField = this;
+        if (self.lastDisabled && (+new Date()) - self.lastDisabled < EditField.DISABLE_TO_ENABLE_TRANSITION_THRESHOLD) {
+            return false;
+        }
         cell.cache = cell.element.text();
         cell.element.empty();
         cell.element.append(this.inputField.val(cell.cache));
         cell.editMode = true;
+        const container = cell.table.container;
+
+        if (container) {
+            container.on("mousedown." + cell.element.attr("id"), {
+                self: this,
+                cell: cell
+            }, this.disable);
+        }
+        EventManager.onReturnKey("#" + self.inputField.attr("id", UUID.register(self.inputField)).attr("id"), self.disable, {
+            self: this,
+            cell: cell
+        });
 
         return false;
     }

@@ -15,12 +15,13 @@ export class Cell {
     public classes: Array<string>;
     public cache: string;
     public editField: EditField;
+    public table: Table;
 
-    private constructor(content: string, readOnly: boolean = false, type: ElementType = ElementType.BODY, classes: Array<string> = []) {
+    private constructor(content: string, readOnly: boolean = false, type: ElementType = ElementType.BODY, classes: Array<string> = [], table?: Table) {
         this.content = content;
         this.readOnly = readOnly;
         this.type = type;
-
+        this.table = table;
         switch (type) {
             case ElementType.FOOTER:
             case ElementType.BODY:
@@ -42,9 +43,9 @@ export class Cell {
             this.element.addClass(this.classes.join(' '));
         }
         this.element.text(content);
-        //this.element.attr("id", UUID.register(this.element));
+        this.element.attr("id", UUID.register(this.element));
 
-        this.editField = new EditField();
+        this.editField = new EditField(this);
     }
 
     public edit(event) {
@@ -61,17 +62,17 @@ export class Cell {
         return cells;
     }
 
-    static from(cellElement: CellElement, type?: "header"|"body"|"footer") {
-        return new Cell(cellElement.content, cellElement.readOnly, type || cellElement.type, cellElement.classes)
+    static from(cellElement: CellElement, type?: "header"|"body"|"footer", table?: Table) {
+        return new Cell(cellElement.content, cellElement.readOnly, type || cellElement.type, cellElement.classes, table)
     }
 
-    static fromArray(cellElements: Array<CellElement>, type?: "header"|"body"|"footer"): Array<Cell> {
+    static fromArray(cellElements: Array<CellElement>, type?: "header"|"body"|"footer", table?: Table): Array<Cell> {
         const cells: Array<Cell> = [];
 
         if (!cellElements) return cells;
 
         cellElements.forEach(function (element) {
-            cells.push(Cell.from(element, type));
+            cells.push(Cell.from(element, type, table));
         });
 
         return cells;

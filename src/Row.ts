@@ -10,15 +10,22 @@ export class Row {
     protected element: any;
     protected type: ElementType;
     protected cells: Array<Cell>;
+    protected table: Table;
 
-    private constructor(cells: Array<Cell>, type: "header"|"body"|"footer" = ElementType.BODY) {
+    private constructor(cells: Array<Cell>, type: "header"|"body"|"footer" = ElementType.BODY, table?: Table) {
         this.cells = cells;
         this.type = type;
-        this.element = $("<tr>");
+        this.element = $("<tr>").addClass(Table.classes.row);
+
+        if (type === ElementType.FOOTER)
+            this.element.addClass(Table.classes.footerRow);
+        if (type === ElementType.HEADER)
+            this.element.addClass(Table.classes.headerRow);
+        this.table = table;
     }
 
-    public static from(element: RowElement): Row {
-        return new Row(Cell.fromArray(element.cellElements, element.type), element.type);
+    public static from(element: RowElement, table: Table): Row {
+        return new Row(Cell.fromArray(element.cellElements, element.type, table), element.type);
     }
 
     public get(cellIndex: number): Cell|null {
@@ -29,7 +36,7 @@ export class Row {
         return this.cells.length;
     }
 
-    public static generateEmptyRows(n: number, cells: number, type: "header"|"body"|"footer") {
+    public static generateEmptyRows(n: number, cells: number, type: "header"|"body"|"footer", table?: Table) {
         const rowElement: RowElement = {
             type: ElementType.BODY,
             cellElements: SimpleCellElement.times(cells)
@@ -37,7 +44,7 @@ export class Row {
 
         const rows: Array<Row> = [];
         for (let i = 0; i < n; i++) {
-            rows.push(Row.from(rowElement));
+            rows.push(Row.from(rowElement, table));
         }
         return rows;
     }

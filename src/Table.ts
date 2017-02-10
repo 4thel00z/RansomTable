@@ -3,10 +3,13 @@ import {TableData} from "./TableData";
 import {RowElement} from "./RowElement";
 import {Cell} from "./Cell";
 import {Range} from "./Range";
+import {EventManager} from "./EventManager";
+import {CellElement} from "./CellElement";
 declare const $: any;
 
 /**
  * TODO: implement paging
+ * TODO: implement hiding
  * **/
 
 export class Table {
@@ -21,7 +24,7 @@ export class Table {
     public tableHeader: any;
     public tableFooter: any;
 
-    private static VISIBLE_ROWS_PER_PAGE: number = 20;
+    private static VISIBLE_ROWS_PER_PAGE: number = 17;
     private currentPage: number = 0;
 
     private visibility: Range = new Range(0, 0);
@@ -42,7 +45,28 @@ export class Table {
     };
 
     constructor(options) {
-        let self = this;
+        const self = this;
+        EventManager.makeGlobal();
+
+        self.load(options);
+        self.calculatePageVisibility();
+    }
+
+    public load(options: {
+        footer: Array<CellElement>,
+        header: Array<CellElement>,
+        body: Array<Array<CellElement>>
+    }) {
+        const self = this;
+        self.loadFromTableData(self.toTableData(options));
+
+    }
+
+    private toTableData(options: {
+        footer: Array<CellElement>,
+        header: Array<CellElement>,
+        body: Array<Array<CellElement>>
+    }): TableData {
         const body: Array<RowElement> = [];
 
         if (options.body) {
@@ -54,7 +78,7 @@ export class Table {
             });
         }
 
-        let tableData: TableData = {
+        return {
             body: body,
             footer: {
                 type: "footer",
@@ -62,18 +86,20 @@ export class Table {
             }, header: {
                 type: "header",
                 cellElements: options.header
-            },
-
+            }
 
         };
+    }
 
+    private loadFromTableData(tableData: TableData) {
+        const self: Table = this;
         self.header = Row.from(tableData.header, self);
-        body.forEach(function (element: RowElement, i: number) {
+        tableData.body.forEach(function (element: RowElement, i: number) {
             self.body[i] = Row.from(element, self);
         });
         self.footer = Row.from(tableData.footer, self);
-        self.visibility.max = self.body.length < Table.VISIBLE_ROWS_PER_PAGE ? self.body.length : Table.VISIBLE_ROWS_PER_PAGE;
     }
+
 
     private initializeViews() {
         this.addTableContainer();
@@ -103,26 +129,6 @@ export class Table {
     private addTableContainer() {
         let self: Table = this;
         self.container = $("<div>").addClass(Table.classes.tableContainer);
-    }
-
-    private removeTableHeader() {
-        this.tableHeader.remove();
-    }
-
-    private removeTableFooter() {
-        this.tableFooter.remove();
-    }
-
-    private removeTableBody() {
-        this.tableBody.remove();
-    }
-
-    private removeTable() {
-        this.table.remove();
-    }
-
-    private removeTableContainer() {
-        this.container.remove();
     }
 
     public getColumn(columnIndex: number, withHeader: boolean = false, withFooter: boolean = false) {
@@ -182,4 +188,65 @@ export class Table {
     }
 
 
+    public hide() {
+        throw new Error("Implement me!");
+    }
+
+
+    private emptyTableHeader() {
+        this.tableHeader.empty();
+    }
+
+    private emptyTableFooter() {
+        this.tableFooter.empty();
+    }
+
+    private emptyTableBody() {
+        this.tableBody.empty();
+    }
+
+    private emptyTable() {
+        this.table.empty();
+    }
+
+    private emptyTableContainer() {
+        this.container.empty();
+    }
+
+    public empty() {
+        this.emptyTableHeader();
+        this.emptyTableBody();
+        this.emptyTableFooter();
+        this.emptyTable();
+        this.emptyTableContainer();
+    }
+
+    private removeTableHeader() {
+        this.tableHeader.remove();
+    }
+
+    private removeTableFooter() {
+        this.tableFooter.remove();
+    }
+
+    private removeTableBody() {
+        this.tableBody.remove();
+    }
+
+    private removeTable() {
+        this.table.remove();
+    }
+
+    private removeTableContainer() {
+        this.container.remove();
+    }
+
+    public remove() {
+        this.removeTableHeader();
+        this.removeTableBody();
+        this.removeTableFooter();
+        this.removeTable();
+        this.removeTableContainer();
+        EventManager.removeGlobal();
+    }
 }

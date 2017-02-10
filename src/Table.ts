@@ -193,32 +193,32 @@ export class Table {
     }
 
 
-    private emptyTableHeader() {
+    private clearTableHeader() {
         this.tableHeader.empty();
     }
 
-    private emptyTableFooter() {
+    private clearTableFooter() {
         this.tableFooter.empty();
     }
 
-    private emptyTableBody() {
+    private clearTableBody() {
         this.tableBody.empty();
     }
 
-    private emptyTable() {
+    private clearTable() {
         this.table.empty();
     }
 
-    private emptyTableContainer() {
+    private clearTableContainer() {
         this.container.empty();
     }
 
-    public empty() {
-        this.emptyTableHeader();
-        this.emptyTableBody();
-        this.emptyTableFooter();
-        this.emptyTable();
-        this.emptyTableContainer();
+    public clear() {
+        this.clearTableHeader();
+        this.clearTableBody();
+        this.clearTableFooter();
+        this.clearTable();
+        this.clearTableContainer();
     }
 
     private removeTableHeader() {

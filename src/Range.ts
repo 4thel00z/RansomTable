@@ -12,6 +12,8 @@ export class Range {
     public isLeftInclusive(i: number) {
         return i >= this.min && i < this.max;
     }
-
+    public isInclusive(i: number) {
+        return i >= this.min && i <= this.max;
+    }
 
 }

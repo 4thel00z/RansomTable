@@ -2,10 +2,10 @@ import {Row} from "./Row";
 import {TableData} from "./TableData";
 import {RowElement} from "./RowElement";
 import {Cell} from "./Cell";
-import {Range} from "./Range";
+import "jquery";
 import {EventManager} from "./EventManager";
 import {CellElement} from "./CellElement";
-declare const $: any;
+import {Paginator} from "./Paginator";
 
 /**
  * TODO: implement paging
@@ -18,16 +18,14 @@ export class Table {
     public body: Array<Row> = [];
     public footer: Row;
 
-    public container: any;
-    public table: any;
-    public tableBody: any;
-    public tableHeader: any;
-    public tableFooter: any;
+    public container: JQuery;
+    public table: JQuery;
+    public tableBody: JQuery;
+    public tableHeader: JQuery;
+    public tableFooter: JQuery;
 
-    private static VISIBLE_ROWS_PER_PAGE: number = 17;
-    private currentPage: number = 0;
+    private paginator: Paginator;
 
-    private visibility: Range = new Range(0, 0);
     public static classes = {
         tableContainer: '-js-rt-container',
         table: '-js-rt-table',
@@ -45,11 +43,10 @@ export class Table {
     };
 
     constructor(options) {
-        const self = this;
         EventManager.makeGlobal();
-
-        self.load(options);
-        self.calculatePageVisibility();
+        this.load(options);
+        this.paginator = new Paginator(this);
+        this.calculatePageVisibility();
     }
 
     public load(options: {
@@ -57,16 +54,11 @@ export class Table {
         header: Array<CellElement>,
         body: Array<Array<CellElement>>
     }) {
-        const self = this;
-        self.loadFromTableData(self.toTableData(options));
+        this.loadFromTableData(this.toTableData(options));
 
     }
 
-    private toTableData(options: {
-        footer: Array<CellElement>,
-        header: Array<CellElement>,
-        body: Array<Array<CellElement>>
-    }): TableData {
+    private toTableData(options: IRawTableOptions): TableData {
         const body: Array<RowElement> = [];
 
         if (options.body) {
@@ -164,12 +156,12 @@ export class Table {
             this.initializeViews();
         }
 
-        self.calculatePageVisibility();
+        this.calculatePageVisibility();
 
         this.table.append(this.header.render(self.tableHeader));
 
         this.body.forEach(function (row, i) {
-            if (self.visibility.isLeftInclusive(i)) {
+            if (self.paginator.isVisible(i)) {
                 row.render(self.tableBody);
             }
         });
@@ -177,14 +169,15 @@ export class Table {
         this.table.append(self.tableBody);
         this.table.append(this.footer.render(self.tableFooter));
         this.table.appendTo(this.container);
+        this.container.append(self.paginator.render());
         $(node).append(this.container);
         return this;
     }
 
     private calculatePageVisibility() {
         const self: Table = this;
-        self.visibility.min = self.currentPage * Table.VISIBLE_ROWS_PER_PAGE;
-        self.visibility.max = (self.currentPage + 1) * Table.VISIBLE_ROWS_PER_PAGE;
+        self.paginator.count = this.getCount();
+        self.paginator.update();
     }
 
 
@@ -249,4 +242,16 @@ export class Table {
         this.removeTableContainer();
         EventManager.removeGlobal();
     }
+
+    public getCount(): number {
+
+        return this.body ? this.body.length : 0;
+    }
+}
+
+
+interface IRawTableOptions {
+    footer: Array<CellElement>,
+    header: Array<CellElement>,
+    body: Array<Array<CellElement>>
 }

@@ -4,19 +4,26 @@
   "description": "A simpler approach towards dynamic table creation.",
   "main": "index.js",
   "dependencies": {
+    "@types/jquery": "^2.0.40",
     "jquery": "^3.1.1"
   },
   "devDependencies": {
+    "browser-sync": "^2.18.7",
     "browserify": "^14.0.0",
     "express": "^4.14.1",
+    "font-awesome": "^4.7.0",
     "gulp": "^3.9.1",
     "gulp-browserify": "^0.5.1",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.4.1",
     "gulp-typescript": "^3.1.4",
+    "gulp-uglify": "^2.0.1",
     "jquery-ui": "^1.12.1",
     "node-sass": "^4.5.0",
-    "typescript": "^2.1.5"
+    "typescript": "^2.1.5",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   },
   "scripts": {
     "test": "test"

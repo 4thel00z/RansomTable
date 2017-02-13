@@ -8,7 +8,10 @@ export class EditField {
 
     private inputField: any;
     private lastDisabled: number;
-    private static DISABLE_TO_ENABLE_TRANSITION_THRESHOLD: number = 400;
+    private static DISABLE_TO_ENABLE_TRANSITION_THRESHOLD: number = 300;
+
+    // Margin around the edited field in which it is safely click without disabling the edit mode
+    private static SAFE_TO_EDIT_MARGIN: number = 10; // in px
 
     constructor(cell: Cell) {
         this.load(cell);
@@ -72,8 +75,8 @@ export class EditField {
         const height: number = element.height();
         const offset: {top: number, left: number} = element.offset();
 
-        return clientX >= offset.left && clientX <= offset.left + width &&
-            clientY >= offset.top && clientY <= offset.top + height;
+        return clientX >= offset.left - EditField.SAFE_TO_EDIT_MARGIN && clientX <= offset.left + width + EditField.SAFE_TO_EDIT_MARGIN &&
+            clientY >= offset.top - EditField.SAFE_TO_EDIT_MARGIN && clientY <= offset.top + height + EditField.SAFE_TO_EDIT_MARGIN;
 
     }
 

@@ -5,17 +5,22 @@ const gulp = require('gulp');
 /**
  * Gulp plugins
  * */
+const browserify2 = require('browserify');
 const sass = require('gulp-sass');
 const rename = require('gulp-rename');
 const ts = require('gulp-typescript');
 const browserify = require('gulp-browserify');
+const tsProject = ts.createProject('tsconfig.json');
+const browserSync = require('browser-sync').create();
+const sourcemaps = require('gulp-sourcemaps');
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
 
 /**
  * Development Testbrowser
  * */
-const express = require('express');
 
-gulp.task('default', ['sass:watch', 'typescript:watch', 'browserify:watch','browserify','run']);
+gulp.task('default', ['sass:watch', 'typescript:watch', 'browserify:watch', 'browserify', 'run']);
 gulp.task('build', ['sass', 'typescript', 'browserify']);
 
 
@@ -24,42 +29,43 @@ gulp.task('build', ['sass', 'typescript', 'browserify']);
  * **/
 
 gulp.task('run', function () {
-    const app = express();
-    const options = {
-        dotfiles: 'ignore',
-        etag: false,
-        extensions: ['htm', 'html'],
-        index: "index.html",
-        maxAge: '1d',
-        redirect: false,
-        setHeaders: function (res, path, stat) {
-            res.set('x-timestamp', Date.now());
-        }
-    };
-    app.use(express.static('.',options));
-    app.listen(3000, function () {
-        console.log('Deployed example on  http://localhost:3000!');
+    browserSync.init({
+        server: "."
     });
 });
 
 
 gulp.task('typescript', function () {
     gulp.src('src/**/*.ts')
-        .pipe(ts())
+        .pipe(tsProject()).js
         .pipe(gulp.dest('dist/js'));
+    browserSync.reload();
 });
 
 gulp.task('browserify', function () {
-    gulp.src('dist/js/index.js')
+
+    const browsy = browserify2({
+        entries: 'dist/js/index.js',
+        debug: true
+    });
+
+    browsy.bundle()
+        .pipe(source('dist/js/index.js'))
+        .pipe(buffer())
+        .pipe(sourcemaps.init({loadSourceMaps: true}))
+        .pipe(sourcemaps.write('./'))
         .pipe(rename("bundle.js"))
-        .pipe(browserify())
         .pipe(gulp.dest('dist/js'));
+
+    browserSync.reload();
+
 });
 
 gulp.task('sass', function () {
     gulp.src('src/css/*.sass')
         .pipe(sass())
-        .pipe(gulp.dest('dist/src/css'))
+        .pipe(gulp.dest('dist/src/css')).pipe(
+        browserSync.stream());
 });
 
 

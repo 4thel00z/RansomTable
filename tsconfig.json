@@ -2,8 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
-    "sourceMap": true,
-
+    "inlineSourceMap": true,
     "outDir": "dist"
   },
   "exclude": [

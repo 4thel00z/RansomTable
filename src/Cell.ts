@@ -9,6 +9,7 @@ export class Cell {
 
     public content: string;
     public readOnly: boolean;
+    public onHover: (event: Event) => boolean;
     public type: ElementType;
     public editMode: boolean = false;
     public element: any;

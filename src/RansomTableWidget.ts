@@ -11,14 +11,15 @@ declare const $: any;
 (function ($) {
     $.widget("ransomware.table", {
 
+        table: undefined,
+
         /**
          * Default options section
          * */
         options: {},
-        _create: function () {
-            let self = this;
 
-            self.table = new Table({
+        _create: function () {
+            this.table = new Table({
                 header: this.options.header,
                 footer: this.options.footer,
                 body: this.options.body
@@ -28,9 +29,7 @@ declare const $: any;
         },
 
         render: function (initialize: boolean) {
-            //this.element .append($(this.tableContainer));
-            const self = this;
-            let table: Table = self.table;
+            let table: Table = this.table;
             if (table) {
                 table.render(this.element, initialize);
             }

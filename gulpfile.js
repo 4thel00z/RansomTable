@@ -20,7 +20,7 @@ const buffer = require('vinyl-buffer');
  * Development Testbrowser
  * */
 
-gulp.task('default', ['sass:watch', 'typescript:watch', 'browserify:watch', 'browserify', 'run']);
+gulp.task('default', ['build', 'sass:watch', 'typescript:watch', 'browserify:watch', 'run']);
 gulp.task('build', ['sass', 'typescript', 'browserify']);
 
 

@@ -1,3 +1,8 @@
+$backgroundColor: #e0e0e0
+$rowBorder: #ddd
+$tableBorder: #ccc
+$inputBoxShadow: #51cbee
+
 body
   font-family: arial
 
@@ -6,7 +11,7 @@ body
   padding: 10px
 
 .-js-rt-table
-  border: 1px solid #ccc
+  border: 1px solid $tableBorder
   width: 100%
   margin: 0
   padding: 0
@@ -14,10 +19,10 @@ body
   border-spacing: 0
 
 .-js-rt-tableBody > .-js-rt-row
-  border: 1px solid #ddd
+  border: 1px solid $rowBorder
   padding: 5px
   &:hover
-    background-color: #e0e0e0
+    background-color: $backgroundColor
 
 .-js-rt-headerCell, .-js-rt-cell
   padding: 10px
@@ -32,13 +37,12 @@ body
   margin-left: 0.8em
 
 .-js-rt-paginatorItem
-  color: #e0e0e0
+  color: $backgroundColor
   &:hover
-    color: #ddd
+    color: $rowBorder
 
 .-js-rt-activePaginatorItem
-    color: #afafaf !important
-
+  color: #afafaf !important
 
 .-js-rt-paginatorContainer
   margin-top: 1em
@@ -46,6 +50,23 @@ body
 
 .-js-rt-paginatorBar
   display: inline-block
+
+.-js-rt-cellHidden
+  display: none
+
+.-js-rt-input
+  display: inline-table
+  box-shadow: 0 0 5px $inputBoxShadow
+  border : 0 solid transparent
+  outline: none
+  text-align: center
+
+.-js-rt-widget-icon
+  -webkit-user-select: none  /* Chrome all / Safari all */
+  -moz-user-select: none     /* Firefox all */
+  -ms-user-select: none      /* IE 10+ */
+  user-select: none
+  cursor: pointer
 
 @media screen and (max-width: 600px)
 
@@ -58,13 +79,14 @@ body
   .-js-rt-row
     margin-bottom: 10px
     display: block
-    border-bottom: 2px solid #ddd
+    border-bottom: 2px solid $rowBorder
 
   .-js-rt-cell
+
     display: block
     text-align: right
     font-size: 13px
-    border-bottom: 1px dotted #ccc
+    border-bottom: 1px dotted $tableBorder
 
   .-js-rt-cell:last-child
     border-bottom: 0

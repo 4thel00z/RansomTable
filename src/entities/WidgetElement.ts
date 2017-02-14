@@ -1,3 +1,3 @@
-/**
- * Created by ransomware on 14.02.17.
- */
+export interface WidgetElement{
+    icon: string, onClick: (event: BaseJQueryEventObject) => boolean
+}

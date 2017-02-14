@@ -4,8 +4,9 @@ import {RowElement} from "./RowElement";
 import {Cell} from "./Cell";
 import "jquery";
 import {EventManager} from "./EventManager";
-import {CellElement} from "./CellElement";
 import {Paginator} from "./Paginator";
+import {WidgetBar} from "./entities/WidgetBar";
+import {TableElement} from "./entities/TableElement";
 
 /**
  * TODO: implement paging
@@ -26,7 +27,7 @@ export class Table {
 
     private paginator: Paginator;
 
-    public static classes = {
+    public static CLASSES = {
         tableContainer: '-js-rt-container',
         table: '-js-rt-table',
         tableBody: '-js-rt-tableBody',
@@ -49,20 +50,23 @@ export class Table {
         this.calculatePageVisibility();
     }
 
-    public load(options: {
-        footer: Array<CellElement>,
-        header: Array<CellElement>,
-        body: Array<Array<CellElement>>
-    }) {
+    public load(options: TableElement) {
         this.loadFromTableData(this.toTableData(options));
-
     }
 
-    private toTableData(options: IRawTableOptions): TableData {
+    private toTableData(options: TableElement): TableData {
         const body: Array<RowElement> = [];
 
         if (options.body) {
-            options.body.forEach(function (row) {
+            options.body.forEach(function (row, i) {
+
+                row.forEach((cell, columnIndex) => {
+                    if (options.widgets && options.widgets[columnIndex]) {
+                        cell.widgetBar = WidgetBar.from(options.widgets[columnIndex]);
+                        cell.readOnly = true;
+                    }
+                });
+
                 body.push({
                     type: "body",
                     cellElements: row
@@ -102,23 +106,23 @@ export class Table {
     }
 
     private addTableHeader() {
-        this.tableHeader = $("<thead>").addClass(Table.classes.tableHeader);
+        this.tableHeader = $("<thead>").addClass(Table.CLASSES.tableHeader);
     }
 
     private addTableFooter() {
-        this.tableFooter = $("<tfoot>").addClass(Table.classes.tableFooter);
+        this.tableFooter = $("<tfoot>").addClass(Table.CLASSES.tableFooter);
     }
 
     private addTableBody() {
-        this.tableBody = $("<tbody>").addClass(Table.classes.tableBody);
+        this.tableBody = $("<tbody>").addClass(Table.CLASSES.tableBody);
     }
 
     private addTable() {
-        this.table = $("<table>").addClass(Table.classes.table);
+        this.table = $("<table>").addClass(Table.CLASSES.table);
     }
 
     private addTableContainer() {
-        this.container = $("<div>").addClass(Table.classes.tableContainer);
+        this.container = $("<div>").addClass(Table.CLASSES.tableContainer);
     }
 
     public getColumn(columnIndex: number, withHeader: boolean = false, withFooter: boolean = false) {
@@ -160,6 +164,7 @@ export class Table {
 
         this.body.forEach(function (row, i) {
             if (self.paginator.isVisible(i)) {
+                row.index = i;
                 row.render(self.tableBody);
             }
         });
@@ -173,7 +178,7 @@ export class Table {
     }
 
     private calculatePageVisibility() {
-        this.paginator.count = this.getCount();
+        this.paginator.count = this.getSize();
         this.paginator.update();
     }
 
@@ -240,15 +245,8 @@ export class Table {
         EventManager.removeGlobal();
     }
 
-    public getCount(): number {
+    public getSize(): number {
 
         return this.body ? this.body.length : 0;
     }
-}
-
-
-interface IRawTableOptions {
-    footer: Array<CellElement>,
-    header: Array<CellElement>,
-    body: Array<Array<CellElement>>
 }

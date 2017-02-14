@@ -4,7 +4,7 @@ import {ElementType} from "./ElementType";
 import {EditField} from "./EditField";
 import {UUID} from "./UUID";
 import "jquery";
-import {WidgetBar} from "./WidgetBar";
+import {WidgetBar} from "./entities/WidgetBar";
 
 export class Cell {
 

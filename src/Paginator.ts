@@ -28,7 +28,7 @@ export class Paginator {
     constructor(table: Table) {
         this.container = $("<div>").addClass(Paginator.classes.container);
         this.paginatorBar = $("<span>").addClass(Paginator.classes.paginatorBar);
-        this._count = table.getCount();
+        this._count = table.getSize();
         this.update();
         this.render();
     }
@@ -52,7 +52,7 @@ export class Paginator {
                 pageBarElement.addClass(Paginator.classes.activeItem);
             }
 
-            pageBarElement.click((event: Event) => {});
+            pageBarElement.click((event: BaseJQueryEventObject) => {});
 
             pageBar.push(pageBarElement);
         }
@@ -104,7 +104,7 @@ interface Arrows {
 class Arrow {
 
     private _element: JQuery;
-    private onClick: (event: Event) => boolean;
+    private onClick: (event: BaseJQueryEventObject) => boolean;
     private static leftClasses = ["fa", "fa-angle-left", Paginator.classes.item, Paginator.classes.arrowLeft].join(" ");
     private static rightClasses = ["fa", "fa-angle-right", Paginator.classes.item, Paginator.classes.arrowRight].join(" ");
     private static doubleLeftClasses = ["fa", "fa-angle-double-left", Paginator.classes.item, Paginator.classes.doubleArrowRight].join(" ");
@@ -118,7 +118,7 @@ class Arrow {
         this._element = value;
     }
 
-    private constructor(onClick: (event: Event) => boolean, type: ArrowType) {
+    private constructor(onClick: (event: BaseJQueryEventObject) => boolean, type: ArrowType) {
         this.onClick = onClick;
 
         switch (type) {
@@ -161,7 +161,7 @@ class Arrow {
 
     private static generateClickHandler(paginator: Paginator, delta: number | "max"|"min") {
 
-        return function (event: Event): boolean {
+        return function (event: BaseJQueryEventObject): boolean {
 
             const currentPage = paginator.currentPage;
             let nextCurrentpage: number;

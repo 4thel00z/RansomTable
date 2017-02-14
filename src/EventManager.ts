@@ -1,4 +1,4 @@
-declare const $: any;
+import "jquery";
 declare const window: any;
 
 export class EventManager {

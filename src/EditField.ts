@@ -81,8 +81,7 @@ export class EditField {
     }
 
     public enable(cell: Cell, event: Event) {
-        const self: EditField = this;
-        if (self.lastDisabled && (+new Date()) - self.lastDisabled < EditField.DISABLE_TO_ENABLE_TRANSITION_THRESHOLD) {
+        if (this.lastDisabled && (+new Date()) - this.lastDisabled < EditField.DISABLE_TO_ENABLE_TRANSITION_THRESHOLD) {
             return false;
         }
         cell.cache = cell.element.text();
@@ -97,7 +96,7 @@ export class EditField {
                 cell: cell
             }, this.disable);
         }
-        EventManager.onReturnKey("#" + self.inputField.attr("id", UUID.register(self.inputField)).attr("id"), self.disable, {
+        EventManager.onReturnKey("#" + this.inputField.attr("id", UUID.register(this.inputField)).attr("id"), this.disable, {
             self: this,
             cell: cell
         });

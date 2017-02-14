@@ -114,13 +114,11 @@ export class Table {
     }
 
     private addTable() {
-        let self: Table = this;
-        self.table = $("<table>").addClass(Table.classes.table);
+        this.table = $("<table>").addClass(Table.classes.table);
     }
 
     private addTableContainer() {
-        let self: Table = this;
-        self.container = $("<div>").addClass(Table.classes.tableContainer);
+        this.container = $("<div>").addClass(Table.classes.tableContainer);
     }
 
     public getColumn(columnIndex: number, withHeader: boolean = false, withFooter: boolean = false) {
@@ -170,14 +168,13 @@ export class Table {
         this.table.append(this.footer.render(self.tableFooter));
         this.table.appendTo(this.container);
         this.container.append(self.paginator.render());
-        $(node).append(this.container);
-        return this;
+        $(node).append(self.container);
+        return self;
     }
 
     private calculatePageVisibility() {
-        const self: Table = this;
-        self.paginator.count = this.getCount();
-        self.paginator.update();
+        this.paginator.count = this.getCount();
+        this.paginator.update();
     }
 
 

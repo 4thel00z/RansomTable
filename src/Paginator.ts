@@ -80,17 +80,16 @@ export class Paginator {
     }
 
     render(): JQuery {
-        const self: Paginator = this;
         this.container.empty();
         this.paginatorBar.empty();
-        this.arrows = Arrow.getArrows(self);
-        this.paginatorBar.append(self.arrows.doubleLeft.element);
-        this.paginatorBar.append(self.arrows.left.element);
+        this.arrows = Arrow.getArrows(this);
+        this.paginatorBar.append(this.arrows.doubleLeft.element);
+        this.paginatorBar.append(this.arrows.left.element);
         this.getPageBarElements().forEach(pageBarElement => pageBarElement.appendTo(this.paginatorBar));
-        this.paginatorBar.append(self.arrows.right.element);
-        this.paginatorBar.append(self.arrows.doubleRight.element);
-        this.container.append(self.paginatorBar);
-        return self.container;
+        this.paginatorBar.append(this.arrows.right.element);
+        this.paginatorBar.append(this.arrows.doubleRight.element);
+        this.container.append(this.paginatorBar);
+        return this.container;
     }
 
     public isVisible(i: number): boolean {

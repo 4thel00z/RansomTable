@@ -1,8 +1,27 @@
-declare const $: any;
+import "jquery";
+declare const window: any;
 
 export class EventManager {
 
     private static eventMap = {};
+
+    public static makeGlobal() {
+        if (window) {
+            if (!window.ransomware) {
+                window.ransomware = {};
+            }
+            if (!window.ransomware.EventManager) {
+                window.ransomware.EventManager = EventManager;
+            }
+        }
+    }
+
+    public static removeGlobal() {
+        if (window && window.ransomware) {
+            return delete window.ransomware.EventManager;
+        }
+        return false;
+    }
 
     private static addToEventMap(selector, eventType, handler) {
         if (!EventManager.eventMap[eventType]) {
@@ -26,11 +45,13 @@ export class EventManager {
         return wasFound;
     }
 
-    public static registerOnKeypress(selector, key, handler) {
-        $(selector).keypress(function (event) {
+    public static registerOnKeypress(selector, key, handler, data?) {
+        EventManager.addToEventMap(selector, "keypress", handler);
+        $(selector).keypress(data, function (event) {
             if (event.which === key) {
-                event.preventDefault();
-                return handler(event);
+                event.data = data;
+                handler(event);
+                return false;
             }
         });
     }
@@ -42,8 +63,8 @@ export class EventManager {
     }
 
 
-    public static onReturnKey(selector, handler) {
-        EventManager.registerOnKeypress(selector, 14, handler);
+    public static onReturnKey(selector, handler, data) {
+        EventManager.registerOnKeypress(selector, 13, handler, data);
     }
 
     public static offReturnKey(selector) {

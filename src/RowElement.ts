@@ -1,6 +1,5 @@
 import {CellElement} from "./CellElement";
-import {ElementType} from "./ElementType";
-export interface RowElement {
-    type: ElementType;
-    cellElements: Array<CellElement>
+export abstract class RowElement {
+    public type?: "header"|"body"|"footer";
+    public cellElements: Array<CellElement>;
 }

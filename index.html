@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>RansomTable</title>
     <link rel="stylesheet" href="dist/src/css/table.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" rel="stylesheet">
 </head>
 <body>
 
@@ -14,13 +18,36 @@
 
     $(document).ready(function () {
 
-        $("<div>").appendTo($("body")).table({
-            data: {
-                body: ["hallo", "test", "pipapo"],
-                header:["header1","header2","header3"],
-                footer:["footer1","footer2","footer3"]
+        const body = [];
+
+        for (let i = 0; i < 17; i++) {
+            body[i] = [{content: "Body", readOnly: true}, {content: "Body"}, {content: "Lorem Ipsum"}];
+        }
+
+        $("body").table({
+            body: body,
+            header: [{content: "Header", readOnly: true}, {content: "Header"}, {content: "Header"}],
+            footer: [{content: "Footer", readOnly: true}, {content: "Footer"}, {content: "Footer"}],
+            widgets: {
+             2 :[{   icon :"telegram" ,onClick: function () {
+                 alert("Is Working!");
+             }}]
             }
-        }).table("render");
+
+        }).table("render", true);
+
+        /*
+
+         // Dialog example :
+
+         $("<div></div>").table({
+         body: body,
+         header: [{content: "Header", readOnly: true}, {content: "Header"},{content: "Header"}],
+         footer: [{content: "Footer", readOnly: true}, {content: "Footer"}, {content: "Footer"}]
+
+         }).table("render", true).dialog();
+
+         */
 
     });
 </script>

@@ -2,7 +2,7 @@ import {Table} from "./Table";
 import {Cell} from "./Cell";
 import {EventManager} from "./EventManager";
 import {UUID} from "./UUID";
-declare const $: any;
+import "jquery";
 
 export class EditField {
 
@@ -18,7 +18,7 @@ export class EditField {
     }
 
     private load(cell: Cell) {
-        this.inputField = $("<input>").addClass(Table.classes.input).val(cell.element.text());
+        this.inputField = $("<input>").addClass(Table.CLASSES.input).val(cell.element.text());
     }
 
     public get() {
@@ -29,7 +29,7 @@ export class EditField {
         this.inputField.remove();
     }
 
-    public edit(cell: Cell, event: Event) {
+    public edit(cell: Cell, event: BaseJQueryEventObject) {
 
         if (cell.readOnly) {
             return;
@@ -80,7 +80,7 @@ export class EditField {
 
     }
 
-    public enable(cell: Cell, event: Event) {
+    public enable(cell: Cell, event: BaseJQueryEventObject) {
         if (this.lastDisabled && (+new Date()) - this.lastDisabled < EditField.DISABLE_TO_ENABLE_TRANSITION_THRESHOLD) {
             return false;
         }

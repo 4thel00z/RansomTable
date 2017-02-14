@@ -1,10 +1,19 @@
-$backgroundColor: #e0e0e0
+$backgroundColor: rgba(224, 224, 224, 0.18)
 $rowBorder: #ddd
 $tableBorder: #ccc
 $inputBoxShadow: #51cbee
 
 body
-  font-family: arial
+  font-family: 'Arial', sans-serif
+
+::-webkit-scrollbar
+  width: 6px
+
+::-webkit-scrollbar-track
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3)
+
+::-webkit-scrollbar-thumb
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3)
 
 .-js-rt-container
   display: block
@@ -17,6 +26,10 @@ body
   padding: 0
   border-collapse: collapse
   border-spacing: 0
+
+.-js-rt-tableHeader
+  background-color: rgba(255,255,255,0.3)
+
 
 .-js-rt-tableBody > .-js-rt-row
   border: 1px solid $rowBorder
@@ -57,14 +70,17 @@ body
 .-js-rt-input
   display: inline-table
   box-shadow: 0 0 5px $inputBoxShadow
-  border : 0 solid transparent
+  border: 0 solid transparent
   outline: none
   text-align: center
 
 .-js-rt-widget-icon
-  -webkit-user-select: none  /* Chrome all / Safari all */
-  -moz-user-select: none     /* Firefox all */
-  -ms-user-select: none      /* IE 10+ */
+  -webkit-user-select: none
+  /* Chrome all / Safari all */
+  -moz-user-select: none
+  /* Firefox all */
+  -ms-user-select: none
+  /* IE 10+ */
   user-select: none
   cursor: pointer
 

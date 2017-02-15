@@ -20,6 +20,7 @@ export class WidgetBar {
 
         cell.element.empty().append(this.cache);
         this.cache = null;
+        this.active = false;
     }
 
     public enable(event: JQueryEventObject) {
@@ -31,6 +32,7 @@ export class WidgetBar {
 
         this.cache = cell.element.text();
         cell.element.empty().append(this.render());
+        this.active = true;
     }
 
     public render(): JQuery {

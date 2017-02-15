@@ -1,6 +1,6 @@
 import {Range} from "./Range";
 import {Table} from "./Table";
-import "jquery";
+// declare const $:JQueryStatic;
 
 export class Paginator {
     private static VISIBLE_ROWS_PER_PAGE: number = 17;

@@ -1,5 +1,6 @@
-import "jquery";
 import {WidgetElement} from "./WidgetElement";
+
+// declare const $:JQueryStatic;
 
 export class Widget {
     private _icon: string;

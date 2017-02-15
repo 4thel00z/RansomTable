@@ -3,8 +3,9 @@ import {CellElement} from "./CellElement";
 import {ElementType} from "./ElementType";
 import {EditField} from "./EditField";
 import {UUID} from "./UUID";
-import "jquery";
 import {WidgetBar} from "./entities/WidgetBar";
+
+// declare const $:JQueryStatic;
 
 export class Cell {
 

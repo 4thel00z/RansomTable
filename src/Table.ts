@@ -2,11 +2,12 @@ import {Row} from "./Row";
 import {TableData} from "./TableData";
 import {RowElement} from "./RowElement";
 import {Cell} from "./Cell";
-import "jquery";
 import {EventManager} from "./EventManager";
 import {Paginator} from "./Paginator";
 import {WidgetBar} from "./entities/WidgetBar";
 import {TableElement} from "./entities/TableElement";
+
+// declare const $:JQueryStatic;
 
 /**
  * TODO: implement paging
@@ -162,7 +163,7 @@ export class Table {
 
         this.table.append(this.header.render(self.tableHeader));
 
-        this.body.forEach(function (row, i) {
+        this.body.forEach(function (row: Row, i: number) {
             if (self.paginator.isVisible(i)) {
                 row.index = i;
                 row.render(self.tableBody);

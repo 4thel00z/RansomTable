@@ -6,7 +6,7 @@ import {Table} from "./Table";
  * TODO: Provide cell edit feature
  * TODO: Implement paging
  * */
-import "jquery";
+// declare const $:JQueryStatic;
 
 (function ($) {
     $.widget("ransomware.table", {
@@ -18,11 +18,14 @@ import "jquery";
          * */
         options: {},
 
-        _create: function () {
-            this.table = new Table(this.options);
+        _create: function (options) {
+            this.setTable(options);
             this._setup();
         },
 
+        setTable: function (options) {
+            this.table = new Table(options);
+        },
         render: function (initialize: boolean) {
              let table: Table = this.table;
             if (table) {

@@ -2,7 +2,8 @@ import {Table} from "./Table";
 import {Cell} from "./Cell";
 import {EventManager} from "./EventManager";
 import {UUID} from "./UUID";
-import "jquery";
+
+// declare const $:JQueryStatic;
 
 export class EditField {
 

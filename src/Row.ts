@@ -2,7 +2,8 @@ import {Cell} from "./Cell";
 import {RowElement} from "./RowElement";
 import {ElementType} from "./ElementType";
 import {Table} from "./Table";
-import "jquery";
+
+// declare const $:JQueryStatic;
 
 export class Row {
 
@@ -11,6 +12,7 @@ export class Row {
     private _cells: Array<Cell>;
     private _table: Table;
     private _index: number;
+    private _visible: boolean;
 
     private constructor(cells: Array<Cell>, type: "header"|"body"|"footer" = ElementType.BODY, table?: Table) {
         this.cells = cells;
@@ -81,5 +83,13 @@ export class Row {
 
     get table(): Table {
         return this._table;
+    }
+
+    get visible(): boolean {
+        return this._visible;
+    }
+
+    set visible(value: boolean) {
+        this._visible = value;
     }
 }

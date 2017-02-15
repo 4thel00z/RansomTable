@@ -1,5 +1,5 @@
-import "jquery";
 declare const window: any;
+// declare const $:JQueryStatic;
 
 export class EventManager {
 

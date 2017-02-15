@@ -139,22 +139,22 @@ class Arrow {
     }
 
     private leftArrow(): Arrow {
-        this.element = $("<i>").addClass(Arrow.leftClasses).click(this.onClick);
+        this.element = $("<span>").addClass(Arrow.leftClasses).click(this.onClick);
         return this;
     }
 
     private rightArrow(): Arrow {
-        this.element = $("<i>").addClass(Arrow.rightClasses).click(this.onClick);
+        this.element = $("<span>").addClass(Arrow.rightClasses).click(this.onClick);
         return this;
     }
 
     private doubleLeftArrow(): Arrow {
-        this.element = $("<i>").addClass(Arrow.doubleLeftClasses).click(this.onClick);
+        this.element = $("<span>").addClass(Arrow.doubleLeftClasses).click(this.onClick);
         return this;
     }
 
     private doubleRightArrow(): Arrow {
-        this.element = $("<i>").addClass(Arrow.doubleRightClasses).click(this.onClick);
+        this.element = $("<span>").addClass(Arrow.doubleRightClasses).click(this.onClick);
         return this;
     }
 

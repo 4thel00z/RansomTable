@@ -1,4 +1,4 @@
-import {RowElement} from "./RowElement";
+import {RowElement} from "./elements/RowElement";
 export interface  TableData {
     header: RowElement,
     footer: RowElement,

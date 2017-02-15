@@ -1,9 +1,9 @@
-import {Table} from "./Table";
-import {CellElement} from "./CellElement";
-import {ElementType} from "./ElementType";
+import {Table} from "../elements/Table";
+import {CellElement} from "../elements/CellElement";
+import {ElementType} from "../elements/ElementType";
 import {EditField} from "./EditField";
-import {UUID} from "./UUID";
-import {WidgetBar} from "./entities/WidgetBar";
+import {UUID} from "../utils/UUID";
+import {WidgetBar} from "./WidgetBar";
 
 // declare const $:JQueryStatic;
 

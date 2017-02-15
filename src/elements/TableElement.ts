@@ -1,4 +1,4 @@
-import {CellElement} from "../CellElement";
+import {CellElement} from "./CellElement";
 import {WidgetElement} from "./WidgetElement";
 
 export interface TableElement {

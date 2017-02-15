@@ -1,3 +1,3 @@
 import "./RansomTableWidget";
-import "./EventManager";
-import "./Table";
+import "./utils/EventManager";
+import "./elements/Table";

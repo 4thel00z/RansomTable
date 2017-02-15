@@ -1,7 +1,7 @@
-import {Table} from "./Table";
+import {Table} from "../elements/Table";
 import {Cell} from "./Cell";
-import {EventManager} from "./EventManager";
-import {UUID} from "./UUID";
+import {EventManager} from "../utils/EventManager";
+import {UUID} from "../utils/UUID";
 
 // declare const $:JQueryStatic;
 

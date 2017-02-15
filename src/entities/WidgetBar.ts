@@ -1,6 +1,6 @@
 import {Widget} from "./Widget";
-import {Cell} from "../Cell";
-import {WidgetElement} from "./WidgetElement";
+import {Cell} from "./Cell";
+import {WidgetElement} from "../elements/WidgetElement";
 export class WidgetBar {
 
     private _widgets: Array<Widget>;

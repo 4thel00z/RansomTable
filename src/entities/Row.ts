@@ -1,7 +1,7 @@
 import {Cell} from "./Cell";
-import {RowElement} from "./RowElement";
-import {ElementType} from "./ElementType";
-import {Table} from "./Table";
+import {RowElement} from "../elements/RowElement";
+import {ElementType} from "../elements/ElementType";
+import {Table} from "../elements/Table";
 
 // declare const $:JQueryStatic;
 

@@ -1,11 +1,11 @@
-import {Row} from "./Row";
-import {TableData} from "./TableData";
+import {Row} from "../entities/Row";
+import {TableData} from "../utils/UserTableData";
 import {RowElement} from "./RowElement";
-import {Cell} from "./Cell";
-import {EventManager} from "./EventManager";
-import {Paginator} from "./Paginator";
-import {WidgetBar} from "./entities/WidgetBar";
-import {TableElement} from "./entities/TableElement";
+import {Cell} from "../entities/Cell";
+import {EventManager} from "../utils/EventManager";
+import {Paginator} from "../entities/Paginator";
+import {WidgetBar} from "../entities/WidgetBar";
+import {TableElement} from "./TableElement";
 
 // declare const $:JQueryStatic;
 

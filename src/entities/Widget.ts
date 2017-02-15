@@ -1,4 +1,4 @@
-import {WidgetElement} from "./WidgetElement";
+import {WidgetElement} from "../elements/WidgetElement";
 
 // declare const $:JQueryStatic;
 

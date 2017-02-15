@@ -1,11 +1,4 @@
-import {Table} from "./Table";
-/**
- * TODO: Replace all console.error calls with exceptions
- * TODO: Provide rudimentary column and row manipulation methods
- * TODO: Provide rudimentary cell styling possibility
- * TODO: Provide cell edit feature
- * TODO: Implement paging
- * */
+import {Table} from "./elements/Table";
 // declare const $:JQueryStatic;
 
 (function ($) {
@@ -17,14 +10,9 @@ import {Table} from "./Table";
          * Default options section
          * */
         options: {},
-
-        _create: function (options) {
-            this.setTable(options);
-            this._setup();
-        },
-
         setTable: function (options) {
             this.table = new Table(options);
+            this._setup();
         },
         render: function (initialize: boolean) {
              let table: Table = this.table;

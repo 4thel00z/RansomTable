@@ -1,5 +1,5 @@
-import {Range} from "./Range";
-import {Table} from "./Table";
+import {Range} from "../utils/Range";
+import {Table} from "../elements/Table";
 // declare const $:JQueryStatic;
 
 export class Paginator {

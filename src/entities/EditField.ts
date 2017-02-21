@@ -66,15 +66,15 @@ export class EditField {
         return false;
     }
 
-    public inBounds(event: {clientX: number, clientY: number}) {
-
+    public inBounds(event: {clientX: number, clientY: number , offsetX:number, offsetY:number}) {
+        
         const clientX: number = event.clientX;
-        const clientY: number = event.clientY;
-
+        const clientY: number = event.clientY+event.offsetY;
         const element = this.inputField;
-        const width: number = element.width();
-        const height: number = element.height();
-        const offset: {top: number, left: number} = element.offset();
+        const bounds = element[0].getBoundingClientRect();
+        const width: number = bounds.width; //element.width();
+        const height: number = bounds.height; //element.height();
+        const offset: {top: number, left: number} =bounds;// element.offset();
 
         return clientX >= offset.left - EditField.SAFE_TO_EDIT_MARGIN && clientX <= offset.left + width + EditField.SAFE_TO_EDIT_MARGIN &&
             clientY >= offset.top - EditField.SAFE_TO_EDIT_MARGIN && clientY <= offset.top + height + EditField.SAFE_TO_EDIT_MARGIN;

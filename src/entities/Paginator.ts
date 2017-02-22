@@ -7,9 +7,9 @@ export class Paginator {
     private _currentPage: number = 0;
     private _visibility: Range = new Range(0, 0);
     private _count: number = 0;
-    private pageBounds: Range = new Range(0, 0);
+    private _pageBounds: Range = new Range(0, 0);
     private container: JQuery;
-    private paginatorBar: JQuery;
+    private _paginatorBar: JQuery;
     private arrows: Arrows;
 
     public static classes: any = {
@@ -17,6 +17,7 @@ export class Paginator {
         paginatorBar: "-js-rt-paginatorBar",
         item: "-js-rt-paginatorItem",
         activeItem: "-js-rt-activePaginatorItem",
+        numberItem: "-js-rt-numberPaginatorItem",
         first: "-js-rt-paginatorFirst",
         last: "-js-rt-paginatorLast",
         arrowRight: "-js-rt-paginatorArrowRight",
@@ -27,21 +28,24 @@ export class Paginator {
 
     constructor(table: Table) {
         this.container = $("<div>").addClass(Paginator.classes.container);
-        this.paginatorBar = $("<span>").addClass(Paginator.classes.paginatorBar);
-        this._count = table.getSize();
-        this.update();
-        this.render();
+        this._paginatorBar = $("<span>").addClass(Paginator.classes.paginatorBar);
+
     }
 
     set count(value: number) {
         this._count = value;
     }
 
-    private getPageBarElements(): Array<JQuery> {
-        const pageBar: Array<JQuery> = [];
-        for (let i = this.pageBounds.min; i < this.pageBounds.max; i++) {
-            const pageBarElement = $("<span>").text(i).addClass(Paginator.classes.item);
+    get count() {
+        return this._count;
+    }
 
+    private getPageBarElements(table:Table): Array<JQuery> {
+        const pageBar: Array<JQuery> = [];
+        const self: Paginator = this;
+        for (let i = this._pageBounds.min; i < this._pageBounds.max; i++) {
+
+            const pageBarElement = $("<span>").text(i).addClass(Paginator.classes.item).addClass(Paginator.classes.numberItem);
             if (i === this.pageBounds.min) {
                 pageBarElement.addClass(Paginator.classes.first);
             }
@@ -51,8 +55,11 @@ export class Paginator {
             if (i === this.currentPage) {
                 pageBarElement.addClass(Paginator.classes.activeItem);
             }
-
-            pageBarElement.click((event: BaseJQueryEventObject) => {});
+            pageBarElement.click((event: BaseJQueryEventObject) => {
+                self.currentPage = i;
+                self.update(table);
+                table.refreshTableBody();
+            });
 
             pageBar.push(pageBarElement);
         }
@@ -72,23 +79,37 @@ export class Paginator {
         return this._visibility;
     }
 
-
-    public update() {
-        this._visibility.min = this._currentPage * Paginator.VISIBLE_ROWS_PER_PAGE;
-        this._visibility.max = (this._currentPage + 1) * Paginator.VISIBLE_ROWS_PER_PAGE;
-        this.pageBounds.max = this._count < 0 ? 0 : this._count / Paginator.VISIBLE_ROWS_PER_PAGE;
+    get paginatorBar(): JQuery {
+        return this._paginatorBar;
     }
 
-    render(): JQuery {
+    get pageBounds(): Range {
+        return this._pageBounds;
+    }
+    
+    public update(table: Table) {
+        debugger;
+        this.count = table.getSize();
+        this.visibility.min = this.currentPage * Paginator.VISIBLE_ROWS_PER_PAGE;
+        this.visibility.max = (this.currentPage + 1) * Paginator.VISIBLE_ROWS_PER_PAGE;
+        this.pageBounds.max = this.count < 0 ? 0 : Math.ceil(this.count / Paginator.VISIBLE_ROWS_PER_PAGE);
+
+        const numberItems = this.paginatorBar.children("." + Paginator.classes.numberItem);
+        numberItems.removeClass(Paginator.classes.activeItem);
+        $(numberItems[this.currentPage]).addClass(Paginator.classes.activeItem);
+
+    }
+
+    public render(table: Table): JQuery {
         this.container.empty();
         this.paginatorBar.empty();
-        this.arrows = Arrow.getArrows(this);
+        this.arrows = Arrow.getArrows(this, table);
         this.paginatorBar.append(this.arrows.doubleLeft.element);
         this.paginatorBar.append(this.arrows.left.element);
-        this.getPageBarElements().forEach(pageBarElement => pageBarElement.appendTo(this.paginatorBar));
+        this.getPageBarElements(table).forEach(pageBarElement => pageBarElement.appendTo(this.paginatorBar));
         this.paginatorBar.append(this.arrows.right.element);
         this.paginatorBar.append(this.arrows.doubleRight.element);
-        this.container.append(this.paginatorBar);
+        this.container.append(this._paginatorBar);
         return this.container;
     }
 
@@ -159,24 +180,28 @@ class Arrow {
     }
 
 
-    private static generateClickHandler(paginator: Paginator, delta: number | "max"|"min") {
+    private static generateClickHandler(paginator: Paginator, delta: number | "max"|"min", table: Table) {
 
         return function (event: BaseJQueryEventObject): boolean {
-
+            debugger;
             const currentPage = paginator.currentPage;
-            let nextCurrentpage: number;
+            let nextCurrentpage: number = currentPage;
 
 
             if (delta === "max" || delta === "min") {
-                nextCurrentpage = delta === "max" ? paginator.visibility.max - 1 : paginator.visibility.min;
+                nextCurrentpage = delta === "max" ? paginator.pageBounds.max - 1 : paginator.pageBounds.min;
             }
-            else {
+            else if (paginator.pageBounds.isLeftInclusive(currentPage + delta)) {
+
                 nextCurrentpage = currentPage + delta;
             }
 
-            if (paginator.visibility.isLeftInclusive(nextCurrentpage)) {
-                paginator.currentPage = nextCurrentpage;
-                paginator.update();
+            const hasToRefresh: boolean = paginator.currentPage !== nextCurrentpage;
+            paginator.currentPage = nextCurrentpage;
+
+            if (hasToRefresh) {
+                paginator.update(table);
+                table.refreshTableBody();
             }
 
             return false;
@@ -184,12 +209,12 @@ class Arrow {
 
     }
 
-    public static getArrows(paginator: Paginator): Arrows {
+    public static getArrows(paginator: Paginator, table: Table): Arrows {
 
-        const onLeft = Arrow.generateClickHandler(paginator, -1);
-        const onRight = Arrow.generateClickHandler(paginator, +1);
-        const onDoubleRight = Arrow.generateClickHandler(paginator, "max");
-        const onDoubleLeft = Arrow.generateClickHandler(paginator, "min");
+        const onLeft = Arrow.generateClickHandler(paginator, -1, table);
+        const onRight = Arrow.generateClickHandler(paginator, +1, table);
+        const onDoubleRight = Arrow.generateClickHandler(paginator, "max", table);
+        const onDoubleLeft = Arrow.generateClickHandler(paginator, "min", table);
 
         return {
             left: new Arrow(onLeft, ArrowType.LEFT),

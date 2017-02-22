@@ -67,7 +67,7 @@ export class EditField {
     }
 
     public inBounds(event: {clientX: number, clientY: number , offsetX:number, offsetY:number}) {
-        
+
         const clientX: number = event.clientX;
         const clientY: number = event.clientY+event.offsetY;
         const element = this.inputField;

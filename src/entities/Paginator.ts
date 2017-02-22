@@ -86,9 +86,8 @@ export class Paginator {
     get pageBounds(): Range {
         return this._pageBounds;
     }
-    
+
     public update(table: Table) {
-        debugger;
         this.count = table.getSize();
         this.visibility.min = this.currentPage * Paginator.VISIBLE_ROWS_PER_PAGE;
         this.visibility.max = (this.currentPage + 1) * Paginator.VISIBLE_ROWS_PER_PAGE;
@@ -183,7 +182,6 @@ class Arrow {
     private static generateClickHandler(paginator: Paginator, delta: number | "max"|"min", table: Table) {
 
         return function (event: BaseJQueryEventObject): boolean {
-            debugger;
             const currentPage = paginator.currentPage;
             let nextCurrentpage: number = currentPage;
 

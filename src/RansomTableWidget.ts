@@ -14,14 +14,8 @@ import {Table} from "./elements/Table";
             this.table = new Table(options);
             this._setup();
         },
-        render: function (initialize: boolean) {
-             let table: Table = this.table;
-            if (table) {
-                table.render(this.element, initialize);
-            }
-            return this;
-        },
-
+        render: null,
+        refresh: null,
         load: null,
 
         /*
@@ -43,7 +37,17 @@ import {Table} from "./elements/Table";
         hide: null,
 
         _setup: function () {
-            this.load = this.table.load;
+            this.load = $.proxy(this.table.load,this.table);
+            this.render = (initialize: boolean) => {
+                let table: Table = this.table;
+                if (table) {
+                    table.render(this.element, initialize);
+                }
+                return this;
+            };
+            this.refresh = () => {
+                this.table.refresh(this.element)
+            };
             this.getCell = this.table.getCell;
             this.getColumn = this.table.getColumn;
             this.getRow = this.table.getRow;

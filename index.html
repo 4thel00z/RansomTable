@@ -20,8 +20,8 @@
 
         const body = [];
 
-        for (let i = 0; i < 17; i++) {
-            body[i] = [{content: "Body", readOnly: true}, {content: "Body"}, {content: "Lorem Ipsum"}];
+        for (let i = 0; i < 50; i++) {
+            body[i] = [{content: "Body"+i, readOnly: true}, {content: "Body"}, {content: "Lorem Ipsum"}];
         }
 
         $("body").table().table("setTable",{
@@ -35,7 +35,18 @@
              }}]
             }
 
-        }).table("render", true);
+        }).table("render", true).table("load",{
+            body: body,
+            header: [{content: "New Table", readOnly: true}, {content: "New Table"}, {content: "New Table Header"}],
+            footer: [{content: "New Table", readOnly: true}, {content: "New Table Footer"}, {content: "New Table Footer"}],
+            widgets: {
+                // In which column you want to have the tools
+                2 :[{   icon :"telegram" ,onClick: function () {
+                    alert("New Table!");
+                }}]
+            }
+
+        }).table("refresh",true);
 
         /*
          // Dialog example :

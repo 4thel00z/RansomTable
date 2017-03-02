@@ -4,15 +4,16 @@ import {ElementType} from "../elements/ElementType";
 import {EditField} from "./EditField";
 import {UUID} from "../utils/UUID";
 import {WidgetBar} from "./WidgetBar";
+import {ButtonBar} from "./ButtonBar";
 
 // declare const $:JQueryStatic;
 
 export class Cell {
-
     private static CLASSES: any = {
         hidden: "-js-rt-cellHidden"
     };
 
+    private _buttonBar: ButtonBar;
     private _widgetBar: WidgetBar;
     private _content: string;
     private _readOnly: boolean;
@@ -44,19 +45,12 @@ export class Cell {
                 break;
         }
 
-        if (this.readOnly) {
-            this.element.addClass(Table.CLASSES.readOnly);
-        } else {
-            this.element.click($.proxy(this.edit, this));
-        }
-
         if (this.classes) {
             this.element.addClass(this.classes.join(' '));
         }
         this.element.text(content);
         this.element.attr("id", UUID.register(this.element));
 
-        this.editField = new EditField(this);
 
         if (widgetBar) {
             this.widgetBar = widgetBar;
@@ -65,18 +59,20 @@ export class Cell {
         }
     }
 
-    public edit(event: BaseJQueryEventObject) {
-        this._editField.edit(this, event);
-    }
+    public refreshEditField() {
+        this.editField = new EditField(this);
 
-    public static generate(n: number, element: CellElement): Array<Cell> {
-        const cells: Array<Cell> = [];
-
-        for (let i = 0; i < n; i++) {
-            cells.push(Cell.from(element));
+        if (this.readOnly) {
+            this.element.addClass(Table.CLASSES.readOnly);
+        } else {
+            this.element.click($.proxy(this.edit, this));
         }
 
-        return cells;
+
+    }
+
+    public edit(event: BaseJQueryEventObject) {
+        this.editField.edit(this, event);
     }
 
     static from(cellElement: CellElement, type?: "header"|"body"|"footer", table?: Table) {
@@ -93,6 +89,14 @@ export class Cell {
         });
 
         return cells;
+    }
+
+    get buttonBar(): ButtonBar {
+        return this._buttonBar;
+    }
+
+    set buttonBar(value: ButtonBar) {
+        this._buttonBar = value;
     }
 
     get content(): string {
@@ -207,4 +211,15 @@ export class Cell {
         this._widgetBar = value;
     }
 
+    public static getPlaceholder(type: ElementType, classes: Array<string> = [], table?: Table, widgetBar?: WidgetBar): Cell {
+        return new Cell("", true, type, classes, table, widgetBar)
+    }
+
+    public render() {
+        if(this.buttonBar){
+            this.element.empty().append(this.buttonBar.render());
+        }
+
+        return this.element;
+    }
 }

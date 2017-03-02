@@ -1,8 +1,9 @@
-import {Table} from "./Table";
+import {Table} from "../elements/Table";
 import {Cell} from "./Cell";
-import {EventManager} from "./EventManager";
-import {UUID} from "./UUID";
-import "jquery";
+import {EventManager} from "../utils/EventManager";
+import {UUID} from "../utils/UUID";
+
+// declare const $:JQueryStatic;
 
 export class EditField {
 
@@ -54,6 +55,7 @@ export class EditField {
         let text: string = self.inputField.val();
         cell.element.empty();
         cell.element.text(text);
+        cell.content = text;
         cell.editMode = false;
         const container = cell.table.container;
         if (container) {
@@ -65,15 +67,15 @@ export class EditField {
         return false;
     }
 
-    public inBounds(event: {clientX: number, clientY: number}) {
+    public inBounds(event: {clientX: number, clientY: number , offsetX:number, offsetY:number}) {
 
         const clientX: number = event.clientX;
-        const clientY: number = event.clientY;
-
+        const clientY: number = event.clientY+event.offsetY;
         const element = this.inputField;
-        const width: number = element.width();
-        const height: number = element.height();
-        const offset: {top: number, left: number} = element.offset();
+        const bounds = element[0].getBoundingClientRect();
+        const width: number = bounds.width; //element.width();
+        const height: number = bounds.height; //element.height();
+        const offset: {top: number, left: number} =bounds;// element.offset();
 
         return clientX >= offset.left - EditField.SAFE_TO_EDIT_MARGIN && clientX <= offset.left + width + EditField.SAFE_TO_EDIT_MARGIN &&
             clientY >= offset.top - EditField.SAFE_TO_EDIT_MARGIN && clientY <= offset.top + height + EditField.SAFE_TO_EDIT_MARGIN;

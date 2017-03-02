@@ -53,7 +53,7 @@ gulp.task('browserify', function () {
         .pipe(source('dist/js/index.js'))
         .pipe(buffer())
         .pipe(sourcemaps.init({loadSourceMaps: true}))
-        .pipe(sourcemaps.write('./'))
+        .pipe(sourcemaps.write('./sourcemaps'))
         .pipe(rename("bundle.js"))
         .pipe(gulp.dest('dist/js'));
 
@@ -64,7 +64,7 @@ gulp.task('browserify', function () {
 gulp.task('sass', function () {
     gulp.src('src/css/*.sass')
         .pipe(sass())
-        .pipe(gulp.dest('dist/src/css')).pipe(
+        .pipe(gulp.dest('dist/css')).pipe(
         browserSync.stream());
 });
 

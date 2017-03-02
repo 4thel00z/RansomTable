@@ -1,12 +1,13 @@
-import "jquery";
-import {WidgetElement} from "./WidgetElement";
+import {WidgetElement} from "../elements/WidgetElement";
+
+// declare const $:JQueryStatic;
 
 export class Widget {
     private _icon: string;
     private _onClick: (event: BaseJQueryEventObject) => boolean;
     private _element: JQuery;
 
-    private static CLASSES = {
+    public static CLASSES = {
         icon: "-js-rt-widget-icon"
     };
 

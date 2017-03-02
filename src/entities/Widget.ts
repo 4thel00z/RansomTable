@@ -7,7 +7,7 @@ export class Widget {
     private _onClick: (event: BaseJQueryEventObject) => boolean;
     private _element: JQuery;
 
-    private static CLASSES = {
+    public static CLASSES = {
         icon: "-js-rt-widget-icon"
     };
 

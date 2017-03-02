@@ -10,6 +10,7 @@ import {Table} from "./elements/Table";
          * Default options section
          * */
         options: {},
+        _create:function(){},
         setTable: function (options) {
             this.table = new Table(options);
             this._setup();

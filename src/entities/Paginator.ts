@@ -1,5 +1,6 @@
 import {Range} from "../utils/Range";
 import {Table} from "../elements/Table";
+import {Widget} from "./Widget";
 // declare const $:JQueryStatic;
 
 export class Paginator {
@@ -12,7 +13,8 @@ export class Paginator {
     private _paginatorBar: JQuery;
     private arrows: Arrows;
 
-    public static classes: any = {
+    public static CLASSES: any = {
+        icon: "-js-rt-widget-icon",
         container: "-js-rt-paginatorContainer",
         paginatorBar: "-js-rt-paginatorBar",
         item: "-js-rt-paginatorItem",
@@ -27,8 +29,8 @@ export class Paginator {
     };
 
     constructor(table: Table) {
-        this.container = $("<div>").addClass(Paginator.classes.container);
-        this._paginatorBar = $("<span>").addClass(Paginator.classes.paginatorBar);
+        this.container = $("<div>").addClass(Paginator.CLASSES.container);
+        this._paginatorBar = $("<span>").addClass(Paginator.CLASSES.paginatorBar);
 
     }
 
@@ -40,20 +42,20 @@ export class Paginator {
         return this._count;
     }
 
-    private getPageBarElements(table:Table): Array<JQuery> {
+    private getPageBarElements(table: Table): Array<JQuery> {
         const pageBar: Array<JQuery> = [];
         const self: Paginator = this;
         for (let i = this._pageBounds.min; i < this._pageBounds.max; i++) {
 
-            const pageBarElement = $("<span>").text(i).addClass(Paginator.classes.item).addClass(Paginator.classes.numberItem);
+            const pageBarElement = $("<span>").text(i).addClass(Paginator.CLASSES.item).addClass(Paginator.CLASSES.numberItem);
             if (i === this.pageBounds.min) {
-                pageBarElement.addClass(Paginator.classes.first);
+                pageBarElement.addClass(Paginator.CLASSES.first);
             }
             if (i === this.pageBounds.max - 1) {
-                pageBarElement.addClass(Paginator.classes.last);
+                pageBarElement.addClass(Paginator.CLASSES.last);
             }
             if (i === this.currentPage) {
-                pageBarElement.addClass(Paginator.classes.activeItem);
+                pageBarElement.addClass(Paginator.CLASSES.activeItem);
             }
             pageBarElement.click((event: BaseJQueryEventObject) => {
                 self.currentPage = i;
@@ -93,9 +95,9 @@ export class Paginator {
         this.visibility.max = (this.currentPage + 1) * Paginator.VISIBLE_ROWS_PER_PAGE;
         this.pageBounds.max = this.count < 0 ? 0 : Math.ceil(this.count / Paginator.VISIBLE_ROWS_PER_PAGE);
 
-        const numberItems = this.paginatorBar.children("." + Paginator.classes.numberItem);
-        numberItems.removeClass(Paginator.classes.activeItem);
-        $(numberItems[this.currentPage]).addClass(Paginator.classes.activeItem);
+        const numberItems = this.paginatorBar.children("." + Paginator.CLASSES.numberItem);
+        numberItems.removeClass(Paginator.CLASSES.activeItem);
+        $(numberItems[this.currentPage]).addClass(Paginator.CLASSES.activeItem);
 
     }
 
@@ -125,10 +127,10 @@ class Arrow {
 
     private _element: JQuery;
     private onClick: (event: BaseJQueryEventObject) => boolean;
-    private static leftClasses = ["fa", "fa-angle-left", Paginator.classes.item, Paginator.classes.arrowLeft].join(" ");
-    private static rightClasses = ["fa", "fa-angle-right", Paginator.classes.item, Paginator.classes.arrowRight].join(" ");
-    private static doubleLeftClasses = ["fa", "fa-angle-double-left", Paginator.classes.item, Paginator.classes.doubleArrowRight].join(" ");
-    private static doubleRightClasses = ["fa", "fa-angle-double-right", Paginator.classes.item, Paginator.classes.doubleArrowRight].join(" ");
+    private static leftClasses = ["fa", "fa-angle-left", Widget.CLASSES.icon, Paginator.CLASSES.item, Paginator.CLASSES.arrowLeft].join(" ");
+    private static rightClasses = ["fa", "fa-angle-right", Widget.CLASSES.icon, Paginator.CLASSES.item, Paginator.CLASSES.arrowRight].join(" ");
+    private static doubleLeftClasses = ["fa", "fa-angle-double-left", Widget.CLASSES.icon, Paginator.CLASSES.item, Paginator.CLASSES.doubleArrowLeft].join(" ");
+    private static doubleRightClasses = ["fa", "fa-angle-double-right", Widget.CLASSES.icon, Paginator.CLASSES.item, Paginator.CLASSES.doubleArrowRight].join(" ");
 
     get element(): JQuery {
         return this._element;

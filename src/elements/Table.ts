@@ -6,6 +6,7 @@ import {EventManager} from "../utils/EventManager";
 import {Paginator} from "../entities/Paginator";
 import {WidgetBar} from "../entities/WidgetBar";
 import {TableElement} from "./TableElement";
+import {ButtonBar} from "../entities/ButtonBar";
 
 // declare const $:JQueryStatic;
 
@@ -26,6 +27,7 @@ export class Table {
     public tableHeader: JQuery;
     public tableFooter: JQuery;
 
+
     private paginator: Paginator;
 
     public static CLASSES = {
@@ -43,6 +45,7 @@ export class Table {
         readOnly: '-js-rt-readOnly',
         input: '-js-rt-input'
     };
+    private buttonBar: ButtonBar;
 
     constructor(options) {
         EventManager.makeGlobal();
@@ -56,6 +59,12 @@ export class Table {
 
     private toTableData(options: TableElement): TableData {
         const body: Array<RowElement> = [];
+
+        let buttonBar: ButtonBar;
+
+        if (options.buttons) {
+            buttonBar = ButtonBar.from(this, options.buttons)
+        }
 
         if (options.body) {
             options.body.forEach(function (row, i) {
@@ -82,18 +91,22 @@ export class Table {
             }, header: {
                 type: "header",
                 cellElements: options.header
-            }
+            },
+            buttonBar: buttonBar
 
         };
     }
 
     private loadFromTableData(tableData: TableData) {
-        const self: Table = this;
-        self.header = Row.from(tableData.header, self);
-        tableData.body.forEach(function (element: RowElement, i: number) {
-            self.body[i] = Row.from(element, self);
+        this.header = Row.from(tableData.header, this);
+        tableData.body.forEach((element: RowElement, i: number) => {
+            this.body[i] = Row.from(element, this);
         });
-        self.footer = Row.from(tableData.footer, self);
+        this.footer = Row.from(tableData.footer, this);
+        this.buttonBar = tableData.buttonBar;
+        if (this.buttonBar) {
+            this.buttonBar.prepend(this);
+        }
     }
 
 

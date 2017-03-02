@@ -55,6 +55,7 @@ export class EditField {
         let text: string = self.inputField.val();
         cell.element.empty();
         cell.element.text(text);
+        cell.content = text;
         cell.editMode = false;
         const container = cell.table.container;
         if (container) {

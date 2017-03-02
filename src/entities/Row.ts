@@ -48,9 +48,10 @@ export class Row {
 
     public render(node: any): any {
         let self: Row = this;
-        this._cells.forEach(function (cell, i) {
+        this._cells.forEach(function (cell: Cell, i) {
             cell.column = i;
-            self._element.append(cell.element);
+            self._element.append(cell.render());
+            cell.refreshEditField();
         });
         $(node).append(this._element);
 
@@ -77,6 +78,10 @@ export class Row {
         this._cells = value;
     }
 
+    get cells(): Array<Cell> {
+        return this._cells;
+    }
+
     get element(): any {
         return this._element;
     }
@@ -91,5 +96,10 @@ export class Row {
 
     set visible(value: boolean) {
         this._visible = value;
+    }
+
+    public prepend(cell: Cell) {
+        this.cells.unshift(cell);
+        return this.cells;
     }
 }

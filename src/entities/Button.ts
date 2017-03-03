@@ -11,7 +11,13 @@ export class Button {
         icon: "-js-rt-button-icon"
     };
 
-    private static FUNCTIONS: any = {};
+    private static FUNCTIONS: {[name: string]: (row: Row) => void} = {
+
+        "default": (row: Row): boolean => {
+            alert("This row has " + row.getSize() + " cells!");
+            return false;
+        }
+    };
     private icon: string;
 
 
@@ -34,9 +40,9 @@ export class Button {
 
     public  render(): JQuery {
         return $("<i>")
-            .addClass(["fa", "fa-" + this.icon].join(" ")).click((event: Event) => {
+            .addClass(["fa", "fa-" + this.icon].join(" ")).click((event: Event): boolean => {
                 if (this.onClick) {
-                    this.onClick(this.row);
+                    return this.onClick(this.row);
                 }
             });
     }

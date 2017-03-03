@@ -1,12 +1,14 @@
-import {Row} from "../entities/Row";
-import {TableData} from "../utils/UserTableData";
+import {Row} from "../components/Row";
+import {TableData} from "../utils/TableData";
 import {RowElement} from "./RowElement";
-import {Cell} from "../entities/Cell";
+import {Cell} from "../components/Cell";
 import {EventManager} from "../utils/EventManager";
-import {Paginator} from "../entities/Paginator";
-import {WidgetBar} from "../entities/WidgetBar";
+import {Paginator} from "../components/Paginator";
+import {WidgetBar} from "../components/WidgetBar";
 import {TableElement} from "./TableElement";
-import {ButtonBar} from "../entities/ButtonBar";
+import {ButtonBar} from "../components/ButtonBar";
+import {FilterBar} from "../components/FilterBar";
+import {MetaData} from "../entities/MetaData";
 
 // declare const $:JQueryStatic;
 
@@ -16,16 +18,24 @@ import {ButtonBar} from "../entities/ButtonBar";
  * **/
 
 export class Table {
+    get metaData(): MetaData<string> {
+        return this._metaData;
+    }
 
-    public header: Row;
-    public body: Array<Row> = [];
-    public footer: Row;
+    set metaData(value: MetaData<string>) {
+        this._metaData = value;
+    }
+    private _header: Row;
+    private _body: Array<Row> = [];
+    private _footer: Row;
+    
+    private _filterBars: Array<FilterBar>;
 
-    public container: JQuery;
-    public table: JQuery;
-    public tableBody: JQuery;
-    public tableHeader: JQuery;
-    public tableFooter: JQuery;
+    private _container: JQuery;
+    private _table: JQuery;
+    private _tableBody: JQuery;
+    private _tableHeader: JQuery;
+    private _tableFooter: JQuery;
 
 
     private paginator: Paginator;
@@ -46,6 +56,7 @@ export class Table {
         input: '-js-rt-input'
     };
     private buttonBar: ButtonBar;
+    private _metaData: MetaData<string>;
 
     constructor(options) {
         EventManager.makeGlobal();
@@ -272,5 +283,75 @@ export class Table {
     public getSize(): number {
 
         return this.body ? this.body.length : 0;
+    }
+
+    get tableFooter(): JQuery {
+        return this._tableFooter;
+    }
+
+    set tableFooter(value: JQuery) {
+        this._tableFooter = value;
+    }
+    get footer(): Row {
+        return this._footer;
+    }
+
+    set footer(value: Row) {
+        this._footer = value;
+    }
+    get header(): Row {
+        return this._header;
+    }
+
+    set header(value: Row) {
+        this._header = value;
+    }
+
+    get body(): Array<Row> {
+        return this._body;
+    }
+
+    set body(value: Array<Row>) {
+        this._body = value;
+    }
+
+    get filterBars(): Array<FilterBar> {
+        return this._filterBars;
+    }
+
+    set filterBars(value: Array<FilterBar>) {
+        this._filterBars = value;
+    }
+
+    get container(): JQuery {
+        return this._container;
+    }
+
+    set container(value: JQuery) {
+        this._container = value;
+    }
+
+    get table(): JQuery {
+        return this._table;
+    }
+
+    set table(value: JQuery) {
+        this._table = value;
+    }
+
+    get tableBody(): JQuery {
+        return this._tableBody;
+    }
+
+    set tableBody(value: JQuery) {
+        this._tableBody = value;
+    }
+
+    get tableHeader(): JQuery {
+        return this._tableHeader;
+    }
+
+    set tableHeader(value: JQuery) {
+        this._tableHeader = value;
     }
 }

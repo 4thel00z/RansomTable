@@ -1,5 +1,5 @@
 import {ElementType} from "./ElementType";
-import {WidgetBar} from "../entities/WidgetBar";
+import {WidgetBar} from "../components/WidgetBar";
 
 export interface  CellElement {
     content: string ;

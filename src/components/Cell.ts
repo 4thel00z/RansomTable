@@ -5,14 +5,17 @@ import {EditField} from "./EditField";
 import {UUID} from "../utils/UUID";
 import {WidgetBar} from "./WidgetBar";
 import {ButtonBar} from "./ButtonBar";
+import {MetaData} from "../entities/MetaData";
 
 // declare const $:JQueryStatic;
 
 export class Cell {
+
     private static CLASSES: any = {
         hidden: "-js-rt-cellHidden"
     };
 
+    private _metaData: MetaData<string>;
     private _buttonBar: ButtonBar;
     private _widgetBar: WidgetBar;
     private _content: string;
@@ -35,6 +38,7 @@ export class Cell {
         this.type = type;
         this.table = table;
         this.classes = classes;
+        this.metaData= new MetaData<string>();
         switch (type) {
             case ElementType.FOOTER:
             case ElementType.BODY:
@@ -216,10 +220,18 @@ export class Cell {
     }
 
     public render() {
-        if(this.buttonBar){
+        if (this.buttonBar) {
             this.element.empty().append(this.buttonBar.render());
         }
 
         return this.element;
+    }
+
+    get metaData(): MetaData<string> {
+        return this._metaData;
+    }
+
+    set metaData(value: MetaData<string>) {
+        this._metaData = value;
     }
 }

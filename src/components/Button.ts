@@ -40,7 +40,7 @@ export class Button {
 
     public  render(): JQuery {
         return $("<i>")
-            .addClass(["fa", "fa-" + this.icon, Button.CLASSES.icon].join(" ")).click((event: Event): boolean => {
+            .addClass(["fa", "fa-" + this.icon, Button.CLASSES.icon].join(" ")).click((event: JQueryEventObject): boolean => {
                 if (this.onClick) {
                     return this.onClick(this.row);
                 }

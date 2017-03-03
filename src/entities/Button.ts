@@ -11,7 +11,7 @@ export class Button {
         icon: "-js-rt-button-icon"
     };
 
-    private static FUNCTIONS: {[name: string]: (row: Row) => void} = {
+    private static FUNCTIONS: {[name: string]: (row: Row) => boolean} = {
 
         "default": (row: Row): boolean => {
             alert("This row has " + row.getSize() + " cells!");
@@ -40,7 +40,7 @@ export class Button {
 
     public  render(): JQuery {
         return $("<i>")
-            .addClass(["fa", "fa-" + this.icon].join(" ")).click((event: Event): boolean => {
+            .addClass(["fa", "fa-" + this.icon, Button.CLASSES.icon].join(" ")).click((event: Event): boolean => {
                 if (this.onClick) {
                     return this.onClick(this.row);
                 }

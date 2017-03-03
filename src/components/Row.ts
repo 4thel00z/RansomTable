@@ -14,7 +14,7 @@ export class Row {
     private _index: number;
     private _visible: boolean;
 
-    private constructor(cells: Array<Cell>, type: "header"|"body"|"footer" = ElementType.BODY, table?: Table) {
+    protected constructor(cells: Array<Cell>, type: "header"|"body"|"footer" = ElementType.BODY, table?: Table) {
         this.cells = cells;
         this.type = type;
         this.element = $("<tr>").addClass(Table.CLASSES.row);

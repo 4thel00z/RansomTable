@@ -6,13 +6,16 @@ import {UUID} from "../utils/UUID";
 import {WidgetBar} from "./WidgetBar";
 import {ButtonBar} from "./ButtonBar";
 import {MetaData} from "../entities/MetaData";
+import {FilterBar} from "./FilterBar";
 
 // declare const $:JQueryStatic;
 
 export class Cell {
 
     private static CLASSES: any = {
-        hidden: "-js-rt-cellHidden"
+        hidden: "-js-rt-cellHidden",
+        cell: '-js-rt-cell',
+        headerCell: '-js-rt-headerCell'
     };
 
     private _metaData: MetaData<string>;
@@ -31,21 +34,27 @@ export class Cell {
     private _elementCache: JQuery;
     private _column: number;
     private _row: number;
+    private filterBar: FilterBar;
 
-    public constructor(content: string, readOnly: boolean = false, type: ElementType = ElementType.BODY, classes: Array<string> = [], table?: Table, widgetBar?: WidgetBar) {
+    public constructor(content: string, readOnly: boolean = false, type: ElementType = ElementType.BODY, classes: Array<string> = [], table?: Table, widgetBar?: WidgetBar, filterBar?: FilterBar, name?: string) {
         this.content = content;
         this.readOnly = readOnly;
         this.type = type;
         this.table = table;
         this.classes = classes;
-        this.metaData= new MetaData<string>();
+        this.metaData = new MetaData<string>();
+        this.metaData.add("name", name);
+        if (filterBar) {
+            this.filterBar = filterBar;
+            this.filterBar.cell = this;
+        }
         switch (type) {
             case ElementType.FOOTER:
             case ElementType.BODY:
-                this.element = $('<td>').addClass(Table.CLASSES.cell);
+                this.element = $('<td>').addClass(Cell.CLASSES.cell);
                 break;
             case ElementType.HEADER:
-                this.element = $('<th>').addClass(Table.CLASSES.headerCell);
+                this.element = $('<th>').addClass(Cell.CLASSES.headerCell);
                 break;
         }
 
@@ -80,7 +89,7 @@ export class Cell {
     }
 
     static from(cellElement: CellElement, type?: "header"|"body"|"footer", table?: Table) {
-        return new Cell(cellElement.content, cellElement.readOnly, type || cellElement.type, cellElement.classes, table, cellElement.widgetBar)
+        return new Cell(cellElement.content, cellElement.readOnly, type || cellElement.type, cellElement.classes, table, cellElement.widgetBar, cellElement.filter, cellElement.name)
     }
 
     static fromArray(cellElements: Array<CellElement>, type?: "header"|"body"|"footer", table?: Table): Array<Cell> {
@@ -222,6 +231,10 @@ export class Cell {
     public render() {
         if (this.buttonBar) {
             this.element.empty().append(this.buttonBar.render());
+        }
+
+        if (this.filterBar) {
+            this.element.append(this.filterBar.render(this.table));
         }
 
         return this.element;

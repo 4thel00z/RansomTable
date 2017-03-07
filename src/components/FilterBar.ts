@@ -1,9 +1,8 @@
-import {Row} from "./Row";
 import {Table} from "../elements/Table";
 import {Map} from "gulp-typescript/release/utils";
-import {Filter} from "../entities/Filter";
 import {Cell} from "./Cell";
 import {FionaFilter} from "../entities/FionaFilter";
+import {FilterHandler} from "./FilterHandler";
 
 export class FilterBar {
 
@@ -18,13 +17,15 @@ export class FilterBar {
 
     public static FUNCTIONS: Map<FilterHandler> = {
 
-        "fiona": (table: Table, columns: Array<Row>, currentString: string) => {
+        "fiona": (table: Table) => {
             const filter = new FionaFilter();
 
             filter.equal("g.ud_id", table.metaData.get("udNumber"));
 
             table.filterBars.forEach((filterBar: FilterBar, i: number) => {
-                (<FionaFilter>filter).handle(filterBar);
+                const constraints = (<FionaFilter>filter).handle(filterBar);
+                // TODO: implement backend logic here !
+                console.log(constraints);
             });
 
             return false;
@@ -33,15 +34,21 @@ export class FilterBar {
     };
 
     constructor(onChange: FilterHandler) {
-        const $input = $("<input>").addClass([FilterBar.CLASSES["input"]].join(" "));
+        const $input = $("<input>").addClass([FilterBar.CLASSES["input"],Table.CLASSES.input].join(" "));
         this.element = $("<div>").addClass([FilterBar.CLASSES["container"]].join(" ")).append($input);
         this.onChange = onChange;
     }
 
-    public render(table: Table, columns: Array<Row>): JQuery {
-        return this._element.change((event: JQueryEventObject) => {
-            if (this._onChange) {
-                return this._onChange(table, columns, $(event.target).val());
+
+    public static from(element: string): FilterBar {
+        const key = element && element.toLowerCase() || "fiona";
+        return key && new FilterBar(FilterBar.FUNCTIONS[key]) || undefined;
+    }
+
+    public render(table: Table): JQuery {
+        return this.element.change((event: JQueryEventObject) => {
+            if (this.onChange) {
+                return this.onChange(table);
             }
         });
     }
@@ -72,6 +79,3 @@ export class FilterBar {
 }
 
 
-export interface FilterHandler {
-    (table: Table, columns: Array<Row>, currentString: string): boolean
-}

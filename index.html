@@ -21,33 +21,48 @@
         const body = [];
 
         for (let i = 0; i < 50; i++) {
-            body[i] = [{content: "Body"+i, readOnly: true}, {content: "Body"}, {content: "Lorem Ipsum"}];
+            body[i] = [{content: "Body" + i, readOnly: true}, {content: "Body"}, {content: "Lorem Ipsum"}];
         }
 
-        $("body").table().table("setTable",{
+        $("body").table().table("setTable", {
             body: body,
             header: [{content: "Header", readOnly: true}, {content: "Header"}, {content: "Header"}],
             footer: [{content: "Footer", readOnly: true}, {content: "Footer"}, {content: "Footer"}],
             widgets: {
-             // In which column you want to have the tools
-             2 :[{   icon :"telegram" ,onClick: function () {
-                 alert("Is Working!");
-             }}]
+                // In which column you want to have the tools
+                2: [{
+                    icon: "telegram", onClick: function () {
+                        alert("Is Working!");
+                    }
+                }]
             }
 
-        }).table("render", true).table("load",{
+        }).table("render", true).table("load", {
             body: body,
-            header: [{content: "New Table", readOnly: true}, {content: "New Table"}, {content: "New Table Header"}],
-            footer: [{content: "New Table", readOnly: true}, {content: "New Table Footer"}, {content: "New Table Footer"}],
+            header: [
+                {content: "New Table", readOnly: true, name: "filterName1"},
+                {content: "New Table", name: "filterName2"},
+                {content: "New Table Header", name: "filterName3"}],
+            footer: [{
+                content: "New Table",
+                readOnly: true
+            }, {content: "New Table Footer"}, {content: "New Table Footer"}],
             widgets: {
                 // In which column you want to have the tools
-                2 :[{   icon :"telegram" ,onClick: function () {
-                    alert("New Table!");
-                }}]
+                2: [{
+                    icon: "telegram", onClick: function () {
+                        alert("New Table!");
+                    }
+                }]
             },
-            buttons:[{icon:"telegram",onClick:"default"}]
+            buttons: [{icon: "telegram", onClick: "default"}],
+            filterBars: {
+                "filterName1": "fiona",
+                "filterName2": "fiona",
+                "filterName3": "fiona"
+            }
 
-        }).table("refresh",true);
+        }).table("refresh", true);
 
         /*
          // Dialog example :

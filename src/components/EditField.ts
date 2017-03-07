@@ -55,6 +55,7 @@ export class EditField {
         let text: string = self.inputField.val();
         cell.element.empty();
         cell.element.text(text);
+        this.refreshFilterBar(cell);
         cell.content = text;
         cell.editMode = false;
         const container = cell.table.container;
@@ -89,6 +90,7 @@ export class EditField {
         cell.cache = cell.element.text();
         cell.element.empty();
         cell.element.append(this.inputField.val(cell.cache));
+        this.refreshFilterBar(cell);
         cell.editMode = true;
         const container = cell.table.container;
 
@@ -104,6 +106,12 @@ export class EditField {
         });
 
         return false;
+    }
+
+    private refreshFilterBar(cell: Cell) {
+        if (cell.filterBar) {
+            cell.element.append(cell.filterBar.render(cell.table))
+        }
     }
 
 }

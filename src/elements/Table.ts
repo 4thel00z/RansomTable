@@ -81,8 +81,15 @@ export class Table {
 
         if (options.filterBars) {
             options.header.forEach((element: CellElement) => {
-                element.filter = options.filterBars[element.name] && FilterBar.from(options.filterBars[element.name]);
-                this.filterBars.push(element.filter);
+                const filter = options.filterBars[element.name] &&
+                    FilterBar.from(options.filterBars[element.name]);
+
+                if (filter) {
+                    element.readOnly = true;
+                    element.filter = filter;
+                    this.filterBars.push(element.filter);
+                }
+
             });
         }
 

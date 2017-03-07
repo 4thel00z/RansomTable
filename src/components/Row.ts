@@ -14,17 +14,22 @@ export class Row {
     private _index: number;
     private _visible: boolean;
 
+    public static CLASSES = {
+        row: '-js-rt-row',
+        headerRow: '-js-rt-header-row',
+        footerRow: '-js-rt-footer-row'
+    };
     protected constructor(cells: Array<Cell>, type: "header"|"body"|"footer" = ElementType.BODY, table?: Table) {
         this.cells = cells;
         this.type = type;
-        this.element = $("<tr>").addClass(Table.CLASSES.row);
+        this.element = $("<tr>").addClass(Row.CLASSES.row);
 
         if (type === ElementType.FOOTER) {
-            this.element.addClass(Table.CLASSES.footerRow);
+            this.element.addClass(Row.CLASSES.footerRow);
         }
 
         if (type === ElementType.HEADER) {
-            this.element.addClass(Table.CLASSES.headerRow);
+            this.element.addClass(Row.CLASSES.headerRow);
         }
 
         this.table = table;
@@ -35,7 +40,7 @@ export class Row {
     }
 
     public get(cellIndex: number): Cell|null {
-        return cellIndex >= 0 && cellIndex < this._cells.length ? this._cells[cellIndex] : null;
+        return cellIndex >= 0 && cellIndex < this.cells.length ? this.cells[cellIndex] : null;
     }
 
     public getSize() {
@@ -48,9 +53,9 @@ export class Row {
 
     public render(node: any): any {
         let self: Row = this;
-        this._cells.forEach(function (cell: Cell, i) {
+        this.cells.forEach(function (cell: Cell, i) {
             cell.column = i;
-            self._element.append(cell.render());
+            self.element.append(cell.render());
             cell.refreshEditField();
         });
         $(node).append(this._element);

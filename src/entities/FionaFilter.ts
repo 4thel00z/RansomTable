@@ -4,14 +4,18 @@ export class FionaFilter extends Filter {
 
     public handle(filterBar: FilterBar) {
         const currentText = filterBar.element.text().trim();
-        const headerName: string = (<string>filterBar.cell.metaData.get("headerName")).toLowerCase();
+        const headerName: string = (<string>filterBar.cell.metaData.get("name")).toLowerCase();
 
         if (currentText !== '') {
             let handlerName = $.inArray(headerName, ["schlagnr", "schlag_nr", "nutz_code"]) ? "handleSchlagNumber" : "handleGenericField";
             this[handlerName](headerName, currentText);
         }
         else
-            this.handleEmpty(headerName)
+            this.handleEmpty(headerName);
+
+        // TODO: use bounding box constraint
+
+        return this.constraints;
     }
 
     public handleSchlagNumber(headerName: string, currentText: string) {

@@ -9,6 +9,7 @@ import {TableElement} from "./TableElement";
 import {ButtonBar} from "../components/ButtonBar";
 import {FilterBar} from "../components/FilterBar";
 import {MetaData} from "../entities/MetaData";
+import {CellElement} from "./CellElement";
 
 // declare const $:JQueryStatic;
 
@@ -18,27 +19,18 @@ import {MetaData} from "../entities/MetaData";
  * **/
 
 export class Table {
-    get metaData(): MetaData<string> {
-        return this._metaData;
-    }
-
-    set metaData(value: MetaData<string>) {
-        this._metaData = value;
-    }
     private _header: Row;
     private _body: Array<Row> = [];
     private _footer: Row;
-    
-    private _filterBars: Array<FilterBar>;
-
+    private _filterBars: Array<FilterBar> = [];
     private _container: JQuery;
     private _table: JQuery;
     private _tableBody: JQuery;
     private _tableHeader: JQuery;
     private _tableFooter: JQuery;
-
-
     private paginator: Paginator;
+    private buttonBar: ButtonBar;
+    private _metaData: MetaData<string>;
 
     public static CLASSES = {
         tableContainer: '-js-rt-container',
@@ -46,40 +38,33 @@ export class Table {
         tableBody: '-js-rt-tableBody',
         tableHeader: '-js-rt-tableHeader',
         tableFooter: '-js-rt-tableFooter',
-        cell: '-js-rt-cell',
-        headerCell: '-js-rt-headerCell',
-        row: '-js-rt-row',
-        headerRow: '-js-rt-header-row',
-        footerRow: '-js-rt-footer-row',
         selected: '-js-rt-selected',
         readOnly: '-js-rt-readOnly',
         input: '-js-rt-input'
     };
-    private buttonBar: ButtonBar;
-    private _metaData: MetaData<string>;
+
 
     constructor(options) {
         EventManager.makeGlobal();
         this.paginator = new Paginator(this);
+        this.metaData = new MetaData<string>(options.metaData);
         this.load(options);
     }
 
-    public load(options: TableElement) {
+    public load(options: TableElement<string>) {
         this.loadFromTableData(this.toTableData(options));
     }
 
-    private toTableData(options: TableElement): TableData {
+    private toTableData(options: TableElement<string>): TableData {
         const body: Array<RowElement> = [];
 
         let buttonBar: ButtonBar;
-
         if (options.buttons) {
             buttonBar = ButtonBar.from(this, options.buttons)
         }
 
         if (options.body) {
-            options.body.forEach(function (row, i) {
-
+            options.body.forEach(function (row) {
                 row.forEach((cell, columnIndex) => {
                     if (options.widgets && options.widgets[columnIndex]) {
                         cell.widgetBar = WidgetBar.from(options.widgets[columnIndex]);
@@ -94,6 +79,13 @@ export class Table {
             });
         }
 
+        if (options.filterBars) {
+            options.header.forEach((element: CellElement) => {
+                element.filter = options.filterBars[element.name] && FilterBar.from(options.filterBars[element.name]);
+                this.filterBars.push(element.filter);
+            });
+        }
+
         return {
             body: body,
             footer: {
@@ -104,7 +96,6 @@ export class Table {
                 cellElements: options.header
             },
             buttonBar: buttonBar
-
         };
     }
 
@@ -149,7 +140,7 @@ export class Table {
         this.container = $("<div>").addClass(Table.CLASSES.tableContainer);
     }
 
-    public getColumn(columnIndex: number, withHeader: boolean = false, withFooter: boolean = false) {
+    public getColumn(columnIndex: number, withHeader: boolean = false, withFooter: boolean = false): Array<Cell> {
         const column: Array<Cell> = [];
 
         this.body.forEach(function (row, i) {
@@ -292,6 +283,7 @@ export class Table {
     set tableFooter(value: JQuery) {
         this._tableFooter = value;
     }
+
     get footer(): Row {
         return this._footer;
     }
@@ -299,6 +291,7 @@ export class Table {
     set footer(value: Row) {
         this._footer = value;
     }
+
     get header(): Row {
         return this._header;
     }
@@ -353,5 +346,13 @@ export class Table {
 
     set tableHeader(value: JQuery) {
         this._tableHeader = value;
+    }
+
+    get metaData(): MetaData<string> {
+        return this._metaData;
+    }
+
+    set metaData(value: MetaData<string>) {
+        this._metaData = value;
     }
 }

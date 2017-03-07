@@ -11,7 +11,6 @@ import {FilterBar} from "./FilterBar";
 // declare const $:JQueryStatic;
 
 export class Cell {
-
     private static CLASSES: any = {
         hidden: "-js-rt-cellHidden",
         cell: '-js-rt-cell',
@@ -34,7 +33,7 @@ export class Cell {
     private _elementCache: JQuery;
     private _column: number;
     private _row: number;
-    private filterBar: FilterBar;
+    private _filterBar: FilterBar;
 
     public constructor(content: string, readOnly: boolean = false, type: ElementType = ElementType.BODY, classes: Array<string> = [], table?: Table, widgetBar?: WidgetBar, filterBar?: FilterBar, name?: string) {
         this.content = content;
@@ -102,6 +101,14 @@ export class Cell {
         });
 
         return cells;
+    }
+    
+    get filterBar(): FilterBar {
+        return this._filterBar;
+    }
+
+    set filterBar(value: FilterBar) {
+        this._filterBar = value;
     }
 
     get buttonBar(): ButtonBar {

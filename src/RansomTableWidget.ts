@@ -1,12 +1,5 @@
-import {Table} from "./Table";
-/**
- * TODO: Replace all console.error calls with exceptions
- * TODO: Provide rudimentary column and row manipulation methods
- * TODO: Provide rudimentary cell styling possibility
- * TODO: Provide cell edit feature
- * TODO: Implement paging
- * */
-import "jquery";
+import {Table} from "./elements/Table";
+// declare const $:JQueryStatic;
 
 (function ($) {
     $.widget("ransomware.table", {
@@ -17,20 +10,13 @@ import "jquery";
          * Default options section
          * */
         options: {},
-
-        _create: function () {
-            this.table = new Table(this.options);
+        _create:function(){},
+        setTable: function (options) {
+            this.table = new Table(options);
             this._setup();
         },
-
-        render: function (initialize: boolean) {
-             let table: Table = this.table;
-            if (table) {
-                table.render(this.element, initialize);
-            }
-            return this;
-        },
-
+        render: null,
+        refresh: null,
         load: null,
 
         /*
@@ -52,7 +38,17 @@ import "jquery";
         hide: null,
 
         _setup: function () {
-            this.load = this.table.load;
+            this.load = $.proxy(this.table.load,this.table);
+            this.render = (initialize: boolean) => {
+                let table: Table = this.table;
+                if (table) {
+                    table.render(this.element, initialize);
+                }
+                return this;
+            };
+            this.refresh = () => {
+                this.table.refresh(this.element)
+            };
             this.getCell = this.table.getCell;
             this.getColumn = this.table.getColumn;
             this.getRow = this.table.getRow;

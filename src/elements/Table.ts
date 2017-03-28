@@ -1,12 +1,14 @@
-import {Row} from "./Row";
-import {TableData} from "./TableData";
+import {Row} from "../entities/Row";
+import {TableData} from "../utils/UserTableData";
 import {RowElement} from "./RowElement";
-import {Cell} from "./Cell";
-import "jquery";
-import {EventManager} from "./EventManager";
-import {Paginator} from "./Paginator";
-import {WidgetBar} from "./entities/WidgetBar";
-import {TableElement} from "./entities/TableElement";
+import {Cell} from "../entities/Cell";
+import {EventManager} from "../utils/EventManager";
+import {Paginator} from "../entities/Paginator";
+import {WidgetBar} from "../entities/WidgetBar";
+import {TableElement} from "./TableElement";
+import {ButtonBar} from "../entities/ButtonBar";
+
+// declare const $:JQueryStatic;
 
 /**
  * TODO: implement paging
@@ -25,6 +27,7 @@ export class Table {
     public tableHeader: JQuery;
     public tableFooter: JQuery;
 
+
     private paginator: Paginator;
 
     public static CLASSES = {
@@ -42,12 +45,12 @@ export class Table {
         readOnly: '-js-rt-readOnly',
         input: '-js-rt-input'
     };
+    private buttonBar: ButtonBar;
 
     constructor(options) {
         EventManager.makeGlobal();
-        this.load(options);
         this.paginator = new Paginator(this);
-        this.calculatePageVisibility();
+        this.load(options);
     }
 
     public load(options: TableElement) {
@@ -56,6 +59,12 @@ export class Table {
 
     private toTableData(options: TableElement): TableData {
         const body: Array<RowElement> = [];
+
+        let buttonBar: ButtonBar;
+
+        if (options.buttons) {
+            buttonBar = ButtonBar.from(this, options.buttons)
+        }
 
         if (options.body) {
             options.body.forEach(function (row, i) {
@@ -82,18 +91,22 @@ export class Table {
             }, header: {
                 type: "header",
                 cellElements: options.header
-            }
+            },
+            buttonBar: buttonBar
 
         };
     }
 
     private loadFromTableData(tableData: TableData) {
-        const self: Table = this;
-        self.header = Row.from(tableData.header, self);
-        tableData.body.forEach(function (element: RowElement, i: number) {
-            self.body[i] = Row.from(element, self);
+        this.header = Row.from(tableData.header, this);
+        tableData.body.forEach((element: RowElement, i: number) => {
+            this.body[i] = Row.from(element, this);
         });
-        self.footer = Row.from(tableData.footer, self);
+        this.footer = Row.from(tableData.footer, this);
+        this.buttonBar = tableData.buttonBar;
+        if (this.buttonBar) {
+            this.buttonBar.prepend(this);
+        }
     }
 
 
@@ -152,34 +165,45 @@ export class Table {
         return null;
     }
 
-    public render(node: any, initialize: boolean) {
-        let self: Table = this;
+    public render(node: JQuery, initialize: boolean) {
         if (initialize) {
             this.initializeViews();
         }
 
         this.calculatePageVisibility();
 
-        this.table.append(this.header.render(self.tableHeader));
+        this.table.append(this.header.render(this.tableHeader));
 
-        this.body.forEach(function (row, i) {
+        this.refreshTableBody();
+
+        this.table.append(this.tableBody);
+        this.table.append(this.footer.render(this.tableFooter));
+        this.table.appendTo(this.container);
+        this.container.append(this.paginator.render(this));
+        $(node).append(this.container);
+
+        return this;
+    }
+
+    public refreshTableBody() {
+        this.clearTableBody();
+        const self: Table = this;
+        this.body.forEach((row: Row, i: number) => {
             if (self.paginator.isVisible(i)) {
                 row.index = i;
                 row.render(self.tableBody);
             }
         });
+    }
 
-        this.table.append(self.tableBody);
-        this.table.append(this.footer.render(self.tableFooter));
-        this.table.appendTo(this.container);
-        this.container.append(self.paginator.render());
-        $(node).append(self.container);
-        return self;
+    public refresh(node: JQuery) {
+        this.clear();
+        this.render(node, true);
     }
 
     private calculatePageVisibility() {
-        this.paginator.count = this.getSize();
-        this.paginator.update();
+        this.paginator.update(this);
+        this.paginator.render(this);
     }
 
 

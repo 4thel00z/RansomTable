@@ -9,7 +9,8 @@ git clone https://github.com/mwheregroup/RansomTable.git
 cd RansomTable
 npm install 
 cd node_modules/jquery-ui 
-npm install 
+npm install
+grunt 
 cd ../..
 gulp
 ```
